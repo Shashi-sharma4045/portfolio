@@ -3,28 +3,28 @@ function Experience() {
   
   const timelineData = [
     {
-      year: '2023 - Present',
+      year: '2024 - Present',
       title: 'B.Tech Computer Science Engineering',
       organization: 'Amity University Jaipur',
       description: 'Pursuing Bachelor of Technology with focus on software engineering, data structures, and system design.',
       type: 'education'
     },
     {
-      year: '2024',
+      year: '2025',
       title: 'AWS Cloud Practitioner',
       organization: 'Amazon Web Services',
       description: 'Foundational understanding of AWS cloud services and architecture principles.',
       type: 'certification'
     },
     {
-      year: '2024',
+      year: '2025',
       title: 'Docker & Containerization',
       organization: 'Self-Learning',
       description: 'Hands-on experience with containerization technologies and orchestration tools.',
       type: 'learning'
     },
     {
-      year: '2023',
+      year: '2025',
       title: 'Linux System Administration',
       organization: 'Online Courses',
       description: 'Comprehensive understanding of Linux systems, shell scripting, and server management.',
