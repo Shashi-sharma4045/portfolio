@@ -1,41 +1,37 @@
 function InteractiveElements() {
-  const [glowEffects, setGlowEffects] = React.useState([]);
-  
+  const containerRef = React.useRef(null);
+
   React.useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
     const handleClick = (e) => {
-      const newGlow = {
-        id: Date.now(),
-        x: e.clientX,
-        y: e.clientY
-      };
-      
-      setGlowEffects(prev => [...prev, newGlow]);
-      
-      setTimeout(() => {
-        setGlowEffects(prev => prev.filter(glow => glow.id !== newGlow.id));
-      }, 1000);
+      const ripple = document.createElement('div');
+      ripple.style.cssText = `
+        position: fixed;
+        left: ${e.clientX}px; top: ${e.clientY}px;
+        width: 8px; height: 8px;
+        margin-left: -4px; margin-top: -4px;
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba(14, 165, 233,0.6) 0%, rgba(245,197,66,0.3) 50%, transparent 70%);
+        pointer-events: none; z-index: 99990;
+        animation: click-ripple 0.7s ease-out forwards;
+      `;
+      container.appendChild(ripple);
+      ripple.addEventListener('animationend', () => ripple.remove());
     };
-    
+
     document.addEventListener('click', handleClick);
     return () => document.removeEventListener('click', handleClick);
   }, []);
 
   try {
     return (
-      <div className="fixed inset-0 pointer-events-none z-50" data-name="interactive-elements" data-file="components/InteractiveElements.js">
-        {glowEffects.map(glow => (
-          <div
-            key={glow.id}
-            className="absolute w-4 h-4 -ml-2 -mt-2 rounded-full"
-            style={{
-              left: glow.x,
-              top: glow.y,
-              background: `radial-gradient(circle, var(--primary-color) 0%, transparent 70%)`,
-              animation: 'pulse-ring 1s ease-out'
-            }}
-          />
-        ))}
-      </div>
+      <div
+        ref={containerRef}
+        style={{ position: 'fixed', inset: 0, pointerEvents: 'none', zIndex: 99990 }}
+        data-name="interactive-elements"
+      />
     );
   } catch (error) {
     console.error('InteractiveElements component error:', error);

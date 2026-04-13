@@ -1,91 +1,177 @@
 function AnimatedBackground() {
-  const [mousePosition, setMousePosition] = React.useState({ x: 0, y: 0 });
-  const [particles, setParticles] = React.useState([]);
-  
-  React.useEffect(() => {
-    // Generate particles
-    const newParticles = [];
-    for (let i = 0; i < 50; i++) {
-      newParticles.push({
+  const dotRef = React.useRef(null);
+  const ringRef = React.useRef(null);
+  const glowRef = React.useRef(null);
+
+  // Particles — generated once
+  const particles = React.useMemo(() => {
+    const p = [];
+    for (let i = 0; i < 25; i++) {
+      p.push({
         id: i,
-        size: Math.random() * 4 + 1,
+        size: Math.random() * 3 + 1.5,
         left: Math.random() * 100,
-        animationDelay: Math.random() * 20,
-        duration: 20 + Math.random() * 15
+        delay: Math.random() * 30,
+        duration: 22 + Math.random() * 20,
       });
     }
-    setParticles(newParticles);
-    
-    // Mouse move handler
-    const handleMouseMove = (e) => {
-      setMousePosition({
-        x: (e.clientX / window.innerWidth) * 100,
-        y: (e.clientY / window.innerHeight) * 100
+    return p;
+  }, []);
+
+  // Cursor follower — pure DOM, zero re-renders
+  React.useEffect(() => {
+    const dot = dotRef.current;
+    const ring = ringRef.current;
+    const glow = glowRef.current;
+    if (!dot || !ring || !glow) return;
+
+    let mx = -100, my = -100;
+    let isHovering = false;
+
+    const onMove = (e) => {
+      mx = e.clientX;
+      my = e.clientY;
+      dot.style.transform = `translate(${mx}px, ${my}px)`;
+      ring.style.transform = `translate(${mx}px, ${my}px)`;
+      glow.style.transform = `translate(${mx}px, ${my}px)`;
+      dot.style.opacity = '1';
+      ring.style.opacity = '1';
+      glow.style.opacity = '1';
+    };
+
+    const onLeave = () => {
+      dot.style.opacity = '0';
+      ring.style.opacity = '0';
+      glow.style.opacity = '0';
+    };
+
+    const onEnterInteractive = () => {
+      isHovering = true;
+      dot.classList.add('interactive');
+      ring.classList.add('interactive');
+    };
+
+    const onLeaveInteractive = () => {
+      isHovering = false;
+      dot.classList.remove('interactive');
+      ring.classList.remove('interactive');
+    };
+
+    document.addEventListener('mousemove', onMove);
+    document.addEventListener('mouseleave', onLeave);
+
+    // Track interactive elements
+    const addInteractiveListeners = () => {
+      document.querySelectorAll('a, button, input, textarea, [role="button"]').forEach(el => {
+        el.addEventListener('mouseenter', onEnterInteractive);
+        el.addEventListener('mouseleave', onLeaveInteractive);
       });
     };
-    
-    window.addEventListener('mousemove', handleMouseMove);
-    return () => window.removeEventListener('mousemove', handleMouseMove);
+    addInteractiveListeners();
+    const mo = new MutationObserver((mutations) => {
+        // Debounce to not kill performance
+        let shouldUpdate = false;
+        for (let m of mutations) {
+            if (m.addedNodes.length > 0) shouldUpdate = true;
+        }
+        if (shouldUpdate) addInteractiveListeners();
+    });
+    mo.observe(document.body, { childList: true, subtree: true });
+
+    return () => {
+      document.removeEventListener('mousemove', onMove);
+      document.removeEventListener('mouseleave', onLeave);
+      mo.disconnect();
+    };
   }, []);
 
   try {
     return (
-      <div className="absolute inset-0 overflow-hidden" data-name="animated-background" data-file="components/AnimatedBackground.js">
-        {/* Grid Pattern */}
-        <div className="absolute inset-0 grid-pattern opacity-20"></div>
-        
-        {/* Floating Particles */}
-        <div className="floating-particles">
-          {particles.map((particle) => (
-            <div
-              key={particle.id}
-              className="particle"
-              style={{
-                width: `${particle.size}px`,
-                height: `${particle.size}px`,
-                left: `${particle.left}%`,
-                animationDelay: `${particle.animationDelay}s`,
-                animationDuration: `${particle.duration}s`
-              }}
-            />
-          ))}
-        </div>
-        
-        {/* Mouse Follow Effect */}
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: `${mousePosition.x}%`,
-            top: `${mousePosition.y}%`,
+      <React.Fragment>
+        {/* Custom cursor elements */}
+        <div ref={dotRef} className="cursor-dot" style={{ opacity: 0 }} />
+        <div ref={ringRef} className="cursor-ring" style={{ opacity: 0 }} />
+        <div ref={glowRef} className="cursor-glow" style={{ opacity: 0 }} />
+
+        {/* Background layer */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none" data-name="animated-background">
+          {/* Floating particles */}
+          <div style={{ position: 'absolute', inset: 0, overflow: 'hidden' }}>
+            {particles.map((p) => (
+              <div
+                key={p.id}
+                className="bg-particle"
+                style={{
+                  width: p.size + 'px',
+                  height: p.size + 'px',
+                  left: p.left + '%',
+                  animationDelay: p.delay + 's',
+                  animationDuration: p.duration + 's',
+                }}
+              />
+            ))}
+          </div>
+
+          {/* Ambient gradient orbs — drift + breathe */}
+          <div style={{
+            position: 'absolute', top: '10%', left: '8%',
+            width: '500px', height: '500px', borderRadius: '50%',
+            background: 'radial-gradient(circle, rgba(14, 165, 233,0.08) 0%, transparent 70%)',
+            filter: 'blur(60px)',
+            animation: 'orb-breathe 8s ease-in-out infinite, orb-drift 25s ease-in-out infinite',
+          }} />
+          <div style={{
+            position: 'absolute', bottom: '5%', right: '5%',
+            width: '450px', height: '450px', borderRadius: '50%',
+            background: 'radial-gradient(circle, rgba(245,197,66,0.06) 0%, transparent 70%)',
+            filter: 'blur(60px)',
+            animation: 'orb-breathe 10s ease-in-out 3s infinite, orb-drift 30s ease-in-out 5s infinite',
+          }} />
+          <div style={{
+            position: 'absolute', top: '50%', left: '55%',
+            width: '550px', height: '550px', borderRadius: '50%',
             transform: 'translate(-50%, -50%)',
-            transition: 'all 0.3s ease'
-          }}
-        >
-          <div className="pulse-ring w-20 h-20"></div>
-          <div className="pulse-ring w-20 h-20" style={{ animationDelay: '1s' }}></div>
-          <div className="pulse-ring w-20 h-20" style={{ animationDelay: '2s' }}></div>
+            background: 'radial-gradient(circle, rgba(244,114,182,0.04) 0%, transparent 70%)',
+            filter: 'blur(80px)',
+            animation: 'orb-breathe 12s ease-in-out 6s infinite, orb-drift 35s ease-in-out 10s infinite',
+          }} />
+
+          {/* Rotating decoration ring */}
+          <div style={{
+            position: 'absolute', top: '20%', right: '15%',
+            width: '180px', height: '180px', borderRadius: '50%',
+            border: '1px solid rgba(14, 165, 233,0.06)',
+            animation: 'rotate-slow 40s linear infinite',
+          }}>
+            <div style={{
+              position: 'absolute', top: '-3px', left: '50%',
+              width: '6px', height: '6px', borderRadius: '50%',
+              background: 'rgba(14, 165, 233,0.3)', marginLeft: '-3px',
+            }} />
+          </div>
+          <div style={{
+            position: 'absolute', bottom: '25%', left: '10%',
+            width: '120px', height: '120px', borderRadius: '50%',
+            border: '1px solid rgba(245,197,66,0.05)',
+            animation: 'rotate-slow 30s linear reverse infinite',
+          }}>
+            <div style={{
+              position: 'absolute', top: '-3px', left: '50%',
+              width: '5px', height: '5px', borderRadius: '50%',
+              background: 'rgba(245,197,66,0.25)', marginLeft: '-2.5px',
+            }} />
+          </div>
+
+          {/* Subtle grid */}
+          <div style={{
+            position: 'absolute', inset: 0,
+            backgroundImage:
+              'linear-gradient(rgba(14, 165, 233,0.018) 1px, transparent 1px), linear-gradient(90deg, rgba(14, 165, 233,0.018) 1px, transparent 1px)',
+            backgroundSize: '70px 70px',
+            opacity: 0.6,
+          }} />
         </div>
-        
-        {/* Matrix Rain Effect */}
-        <div className="absolute inset-0 opacity-5">
-          {[...Array(20)].map((_, i) => (
-            <div
-              key={i}
-              className="absolute w-px bg-[var(--primary-color)] opacity-30"
-              style={{
-                left: `${Math.random() * 100}%`,
-                height: `${20 + Math.random() * 40}px`,
-                animation: `matrix-rain ${3 + Math.random() * 4}s linear infinite`,
-                animationDelay: `${Math.random() * 5}s`
-              }}
-            />
-          ))}
-        </div>
-        
-        {/* Gradient Orbs */}
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-gradient-to-r from-[var(--primary-color)] to-transparent rounded-full opacity-5 blur-3xl animate-pulse"></div>
-        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-gradient-to-l from-[var(--secondary-color)] to-transparent rounded-full opacity-5 blur-3xl animate-pulse" style={{ animationDelay: '2s' }}></div>
-      </div>
+      </React.Fragment>
     );
   } catch (error) {
     console.error('AnimatedBackground component error:', error);

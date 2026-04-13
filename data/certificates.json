@@ -1,0 +1,47 @@
+[
+  {
+    "id": "edu-btech",
+    "year": "2024 – Present",
+    "title": "B.Tech Computer Science Engineering",
+    "org": "Amity University Jaipur",
+    "desc": "Pursuing B.Tech with focus on software engineering, data structures, system design, and cloud computing. Active member of the tech club.",
+    "type": "education",
+    "icon": "🎓"
+  },
+  {
+    "id": "cert-aws-clf",
+    "year": "2025",
+    "title": "AWS Cloud Practitioner",
+    "org": "Amazon Web Services",
+    "desc": "Foundational certification covering AWS cloud concepts, core services, security, architecture, pricing, and support.",
+    "type": "certification",
+    "icon": "🏆"
+  },
+  {
+    "id": "learn-docker",
+    "year": "2025",
+    "title": "Docker & Container Orchestration",
+    "org": "Self-Learning · KodeKloud",
+    "desc": "Hands-on mastery of Docker containerization — building images, multi-stage builds, Docker Compose, and container networking.",
+    "type": "learning",
+    "icon": "🐳"
+  },
+  {
+    "id": "learn-linux",
+    "year": "2025",
+    "title": "Linux System Administration",
+    "org": "The Linux Foundation",
+    "desc": "Shell scripting, cron jobs, file systems, user management, process control, and server hardening techniques.",
+    "type": "learning",
+    "icon": "🐧"
+  },
+  {
+    "id": "learn-terraform",
+    "year": "2025",
+    "title": "Terraform & Infrastructure as Code",
+    "org": "HashiCorp Learn + Udemy",
+    "desc": "Reusable Terraform modules, state management, workspaces, remote backends, and CI/CD integration.",
+    "type": "learning",
+    "icon": "🏗️"
+  }
+]

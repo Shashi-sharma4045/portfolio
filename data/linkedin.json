@@ -1,0 +1,35 @@
+[
+  {
+    "title": "AWS Infrastructure as Code",
+    "desc": "Terraform modules for provisioning complete AWS environments — VPC, ECS clusters, RDS, CloudFront, and IAM — all version-controlled.",
+    "tags": ["Terraform", "AWS", "EC2", "S3"],
+    "cat": "LinkedIn",
+    "status": "In Progress",
+    "statusColor": "#f5c542",
+    "icon": "🏗️",
+    "color": "#e8985a",
+    "link": "https://linkedin.com/in/shashi-kant-sharma-a338a5318"
+  },
+  {
+    "title": "Prometheus + Grafana Stack",
+    "desc": "Complete observability stack with metrics scraping, Grafana dashboards, AlertManager rules, and Slack notifications.",
+    "tags": ["Prometheus", "Grafana", "Docker"],
+    "cat": "LinkedIn",
+    "status": "Learning",
+    "statusColor": "#f472b6",
+    "icon": "📊",
+    "color": "#818cf8",
+    "link": "https://linkedin.com/in/shashi-kant-sharma-a338a5318"
+  },
+  {
+    "title": "Ansible Server Provisioning",
+    "desc": "Playbooks for automated server hardening, software installation, and config management across dev/staging/production.",
+    "tags": ["Ansible", "Linux", "YAML", "SSH"],
+    "cat": "LinkedIn",
+    "status": "Planning",
+    "statusColor": "#67e8f9",
+    "icon": "🤖",
+    "color": "#0ea5e9",
+    "link": "https://linkedin.com/in/shashi-kant-sharma-a338a5318"
+  }
+]

@@ -38,6 +38,7 @@ function App() {
   try {
     return (
       <div className="min-h-screen bg-[var(--bg-primary)]" data-name="app" data-file="app.js">
+        <Navbar />
         <InteractiveElements />
         <Hero />
         <About />
