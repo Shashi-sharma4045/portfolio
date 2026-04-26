@@ -1,4 +1,4 @@
-function Navbar() {
+function Navbar({ onTerminalOpen }) {
   const [scrolled, setScrolled] = React.useState(false);
   const [menuOpen, setMenuOpen] = React.useState(false);
   const [activeSection, setActiveSection] = React.useState('hero');
@@ -36,90 +36,46 @@ function Navbar() {
 
   try {
     return (
-      <nav data-name="navbar" className="nav-bar" style={{
-        position: 'fixed', top: 0, left: 0, right: 0, zIndex: 1000,
-        transition: 'all 0.35s ease',
-        background: scrolled ? 'rgba(8, 7, 13, 0.92)' : 'transparent',
-        backdropFilter: scrolled ? 'blur(20px) saturate(1.5)' : 'none',
-        borderBottom: scrolled ? '1px solid rgba(14, 165, 233,0.1)' : 'none',
-        boxShadow: scrolled ? '0 4px 40px rgba(0,0,0,0.5)' : 'none',
-      }}>
-        <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 24px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: '64px' }}>
-            <a href="#hero" onClick={(e) => handleNavClick(e, '#hero')} style={{
-              fontFamily: "'Outfit', monospace", fontWeight: 800, fontSize: '1.25rem',
-              background: 'linear-gradient(90deg, #0ea5e9, #f5c542)',
-              WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
-              textDecoration: 'none', letterSpacing: '-0.5px',
-            }}>
-              {'<SKS />'}
-            </a>
-
-            <div style={{ display: 'flex', gap: '2px', alignItems: 'center' }} className="desktop-nav">
-              {navLinks.map((link) => {
-                const isActive = activeSection === link.href.replace('#', '');
-                return (
-                  <a key={link.href} href={link.href} onClick={(e) => handleNavClick(e, link.href)}
-                    className={`nav-link ${isActive ? 'active' : ''}`}>
+      <nav data-name="navbar" className={`fixed top-0 w-full z-50 transition-all duration-500 border-b ${scrolled ? 'bg-[#131313]/90 backdrop-blur-2xl border-white/5 py-6' : 'bg-transparent border-transparent py-8 md:py-10'}`}>
+        <div className="flex justify-between items-center px-6 md:px-12 max-w-[1800px] mx-auto">
+          <a href="#hero" onClick={(e) => handleNavClick(e, '#hero')} className="text-xl md:text-2xl font-light tracking-[0.25em] text-white font-headline uppercase hover:text-primary-fixed transition-colors duration-500">
+            SKS / INFRA. CORE
+          </a>
+          
+          <div className="hidden md:flex gap-12 items-center">
+            {navLinks.map((link) => {
+              const isActive = activeSection === link.href.replace('#', '');
+              return (
+                 <a key={link.href} href={link.href} onClick={(e) => handleNavClick(e, link.href)}
+                    className={`font-body text-[11px] tracking-widest uppercase transition-colors duration-500 ${isActive ? 'text-primary-fixed font-bold' : 'text-white/60 hover:text-primary-fixed'}`}>
                     {link.label}
-                  </a>
-                );
-              })}
-              <a href="mailto:shaskantsharma2@gmail.com" className="nav-cta">
-                Hire Me
-              </a>
-            </div>
-
-            <button onClick={() => setMenuOpen(!menuOpen)} className="mobile-menu-btn" style={{
-              background: 'none', border: '1px solid rgba(14, 165, 233,0.3)', borderRadius: '8px',
-              padding: '8px', color: '#0ea5e9', display: 'none',
-            }}>
-              <div className={`icon-${menuOpen ? 'x' : 'menu'} text-xl`}></div>
-            </button>
+                 </a>
+              );
+            })}
           </div>
-
-          {menuOpen && (
-            <div style={{
-              position: 'absolute', top: '64px', left: 0, right: 0,
-              background: 'rgba(8,7,13,0.97)', backdropFilter: 'blur(20px)',
-              borderBottom: '1px solid rgba(14, 165, 233,0.1)',
-              padding: '16px 24px', display: 'flex', flexDirection: 'column', gap: '8px',
-            }}>
-              {navLinks.map((link) => (
-                <a key={link.href} href={link.href} onClick={(e) => handleNavClick(e, link.href)}
-                  style={{ padding: '12px 16px', borderRadius: '8px', fontSize: '1rem', fontWeight: 500,
-                    textDecoration: 'none', color: '#8a86a0', transition: 'color 0.2s' }}>
-                  {link.label}
-                </a>
-              ))}
-            </div>
-          )}
+          
+          <div className="flex items-center gap-4 text-white/60">
+             <button onClick={() => setMenuOpen(!menuOpen)} className="md:hidden hover:text-primary-fixed cursor-pointer transition-colors p-2">
+                 <div className={`icon-${menuOpen ? 'x' : 'menu'} text-2xl`} />
+             </button>
+             <button onClick={onTerminalOpen} className="hidden md:block icon-terminal hover:text-primary-fixed cursor-pointer transition-colors text-xl p-2" aria-label="Open Terminal" />
+          </div>
         </div>
 
-        <style>{`
-          .nav-link {
-            padding: 6px 16px; border-radius: 8px; font-size: 0.875rem; font-weight: 400;
-            text-decoration: none; color: #8a86a0; background: transparent;
-            transition: all 0.2s ease; font-family: 'Inter', sans-serif;
-          }
-          .nav-link:hover { color: #e8e6f0; background: rgba(14, 165, 233,0.06); }
-          .nav-link.active { color: #0ea5e9; font-weight: 600; background: rgba(14, 165, 233,0.1); }
-
-          .nav-cta {
-            margin-left: 8px; padding: 8px 20px; border-radius: 8px;
-            font-size: 0.875rem; font-weight: 600; text-decoration: none;
-            color: #0a0a12; background: linear-gradient(135deg, #0ea5e9, #f5c542);
-            font-family: 'Inter', sans-serif;
-            box-shadow: 0 0 18px rgba(14, 165, 233,0.3);
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-          }
-          .nav-cta:hover { transform: translateY(-1px); box-shadow: 0 0 30px rgba(14, 165, 233,0.5); }
-
-          @media (max-width: 768px) {
-            .desktop-nav { display: none !important; }
-            .mobile-menu-btn { display: flex !important; }
-          }
-        `}</style>
+        {/* Mobile Nav */}
+        <div className={`md:hidden absolute top-full left-0 w-full bg-[#131313]/95 backdrop-blur-xl border-b border-white/5 transition-all duration-300 overflow-hidden ${menuOpen ? 'max-h-[400px] opacity-100 py-4' : 'max-h-0 opacity-0 py-0'}`}>
+           <div className="flex flex-col gap-4 px-6">
+              {navLinks.map((link) => {
+                 const isActive = activeSection === link.href.replace('#', '');
+                 return (
+                   <a key={link.href} href={link.href} onClick={(e) => handleNavClick(e, link.href)}
+                      className={`font-body text-xs tracking-widest uppercase py-3 border-b border-white/5 transition-colors ${isActive ? 'text-primary-fixed font-bold' : 'text-white/60'}`}>
+                      {link.label}
+                   </a>
+                 );
+              })}
+           </div>
+        </div>
       </nav>
     );
   } catch (error) {

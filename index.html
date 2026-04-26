@@ -2,9 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif:wght@100;200;300&family=Space+Grotesk:wght@300;400;500;700&display=swap" rel="stylesheet">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
     <title>Shashi Kant Sharma - DevOps Portfolio</title>
@@ -22,23 +20,93 @@
     <script src="https://resource.trickle.so/vendor_lib/unpkg/react@18/umd/react.production.min.js"></script>
     <script src="https://resource.trickle.so/vendor_lib/unpkg/react-dom@18/umd/react-dom.production.min.js"></script>
     <script src="https://resource.trickle.so/vendor_lib/unpkg/@babel/standalone/babel.min.js"></script>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "on-error-container": "#ffdad6",
+                      "primary-container": "#b6f700",
+                      "surface-container-high": "#2a2a2a",
+                      "primary": "#ffffff",
+                      "primary-fixed": "#b6f700",
+                      "error": "#ffb4ab",
+                      "inverse-surface": "#e5e2e1",
+                      "on-secondary-container": "#d5ff82",
+                      "outline-variant": "#424933",
+                      "error-container": "#93000a",
+                      "secondary-fixed-dim": "#add45d",
+                      "tertiary-fixed-dim": "#bac8db",
+                      "inverse-primary": "#4a6700",
+                      "surface-bright": "#3a3939",
+                      "surface-container-highest": "#353534",
+                      "on-background": "#e5e2e1",
+                      "primary-fixed-dim": "#9fd800",
+                      "on-tertiary-fixed": "#0f1d2b",
+                      "on-error": "#690005",
+                      "on-primary-fixed": "#141f00",
+                      "on-secondary-fixed": "#141f00",
+                      "tertiary": "#ffffff",
+                      "surface": "#131313",
+                      "on-primary": "#253600",
+                      "secondary": "#add45d",
+                      "surface-container-low": "#1c1b1b",
+                      "background": "#0a0a0a",
+                      "on-secondary-fixed-variant": "#374e00",
+                      "on-primary-container": "#4f6e00",
+                      "secondary-fixed": "#c8f175",
+                      "surface-variant": "#353534",
+                      "tertiary-fixed": "#d6e4f8",
+                      "surface-tint": "#9fd800",
+                      "outline": "#8c9479",
+                      "on-tertiary-fixed-variant": "#3b4858",
+                      "surface-container": "#201f1f",
+                      "surface-dim": "#131313",
+                      "on-tertiary-container": "#586676",
+                      "on-surface-variant": "#c2caad",
+                      "on-primary-fixed-variant": "#374e00",
+                      "inverse-on-surface": "#313030",
+                      "secondary-container": "#567700",
+                      "on-surface": "#e5e2e1",
+                      "tertiary-container": "#d6e4f8",
+                      "on-tertiary": "#243140",
+                      "on-secondary": "#253600",
+                      "surface-container-lowest": "#0e0e0e"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0px",
+                      "lg": "0px",
+                      "xl": "0px",
+                      "full": "9999px"
+              },
+              "fontFamily": {
+                      "headline": ["Noto Serif"],
+                      "display": ["Noto Serif"],
+                      "body": ["Space Grotesk"],
+                      "label": ["Space Grotesk"]
+              }
+            },
+          }
+        }
+    </script>
     <link href="https://resource.trickle.so/vendor_lib/unpkg/lucide-static@0.516.0/font/lucide.css" rel="stylesheet">
 
     <style type="text/tailwindcss">
     @layer theme {
         :root {
-            --primary-color: #0ea5e9;
-            --secondary-color: #f5c542;
-            --accent-color: #f472b6;
-            --bg-primary: #08070d;
-            --bg-secondary: #0e0d16;
-            --bg-card: #13121e;
-            --text-primary: #e8e6f0;
-            --text-secondary: #8a86a0;
-            --text-muted: #4e4a62;
-            --border-subtle: rgba(14, 165, 233,0.08);
-            --border-hover: rgba(14, 165, 233,0.18);
+            --primary-color: #ffffff;
+            --secondary-color: #bbbbbb;
+            --accent-color: #bcff00;
+            --bg-primary: #0a0a0a;
+            --bg-secondary: #111111;
+            --bg-card: #151515;
+            --text-primary: #f2f2f2;
+            --text-secondary: #999999;
+            --text-muted: #666666;
+            --border-subtle: rgba(255, 255, 255, 0.08);
+            --border-hover: rgba(255, 255, 255, 0.2);
         }
     }
 
@@ -47,7 +115,6 @@
             @apply border-0 box-border;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
-            cursor: none !important;
         }
 
         html {
@@ -55,100 +122,45 @@
         }
 
         body {
-            @apply bg-[var(--bg-primary)] text-[var(--text-primary)] overflow-x-hidden;
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            line-height: 1.6;
-            cursor: none;
-        }
-
-        a, button, input, textarea, select {
-            cursor: none;
+            @apply bg-[#0a0a0a] text-primary overflow-x-hidden;
+            font-family: 'Space Grotesk', sans-serif;
+            line-height: 1.7;
         }
 
         h1, h2, h3, h4, h5, h6 {
-            font-family: 'Outfit', 'Inter', sans-serif;
+            font-family: 'Noto Serif', serif;
             line-height: 1.2;
         }
 
         input, textarea, button, select {
-            font-family: 'Inter', sans-serif;
+            font-family: 'Space Grotesk', sans-serif;
         }
 
         ::selection {
-            background: rgba(14, 165, 233, 0.25);
-            color: #fff;
+            @apply bg-primary-fixed text-on-primary-fixed;
         }
 
         ::-webkit-scrollbar {
-            width: 5px;
+            width: 6px;
         }
         ::-webkit-scrollbar-track {
             background: var(--bg-primary);
         }
         ::-webkit-scrollbar-thumb {
-            background: rgba(14, 165, 233,0.18);
+            background: rgba(100, 181, 246, 0.12);
             border-radius: 10px;
         }
         ::-webkit-scrollbar-thumb:hover {
-            background: rgba(14, 165, 233,0.35);
+            background: rgba(100, 181, 246, 0.25);
         }
     }
 
     @layer components {
-        /* ── Cursor follower ── */
-        .cursor-dot {
-            position: fixed;
-            top: 0; left: 0;
-            margin-left: -4px; margin-top: -4px;
-            width: 8px; height: 8px;
-            background: var(--primary-color);
-            border-radius: 50%;
-            pointer-events: none;
-            z-index: 99999;
-            transition: transform 0.08s ease-out, opacity 0.3s, background 0.3s, box-shadow 0.3s, width 0.3s, height 0.3s, margin 0.3s;
-            box-shadow: 0 0 12px rgba(14, 165, 233,0.8);
-            mix-blend-mode: screen;
-        }
-        .cursor-dot.interactive {
-            background: var(--secondary-color);
-            box-shadow: 0 0 15px rgba(245,197,66,0.8);
-            width: 16px; height: 16px;
-            margin-left: -8px; margin-top: -8px;
-        }
-        .cursor-ring {
-            position: fixed;
-            top: 0; left: 0;
-            margin-left: -18px; margin-top: -18px;
-            width: 36px; height: 36px;
-            border: 1.5px solid rgba(14, 165, 233,0.4);
-            border-radius: 50%;
-            pointer-events: none;
-            z-index: 99998;
-            transition: transform 0.18s ease-out, width 0.3s ease-out, height 0.3s ease-out, margin 0.3s ease-out, border-color 0.3s, opacity 0.3s;
-            mix-blend-mode: screen;
-        }
-        .cursor-ring.interactive {
-            width: 60px; height: 60px;
-            margin-left: -30px; margin-top: -30px;
-            border-color: rgba(245,197,66,0.8);
-        }
-        .cursor-glow {
-            position: fixed;
-            top: 0; left: 0;
-            margin-left: -100px; margin-top: -100px;
-            width: 200px; height: 200px;
-            background: radial-gradient(circle, rgba(14, 165, 233,0.06) 0%, transparent 70%);
-            border-radius: 50%;
-            pointer-events: none;
-            z-index: 99997;
-            transition: transform 0.3s ease-out;
-        }
-
         /* ── Hero gradient ── */
         .animated-gradient {
             background: linear-gradient(-45deg, #0d0820, #120a1a, #0a0d1e, #100818);
             background-size: 300% 300%;
-            animation: hero-gradient 20s ease infinite;
+            animation: hero-gradient 25s ease infinite;
             will-change: background-position;
         }
 
@@ -173,14 +185,14 @@
         /* ── Section utility ── */
         .section-divider {
             height: 1px;
-            background: linear-gradient(90deg, transparent, rgba(14, 165, 233,0.15), transparent);
+            background: linear-gradient(90deg, transparent, rgba(100, 181, 246, 0.1), transparent);
         }
 
         /* ── Reveal animations ── */
         .reveal {
             opacity: 0;
-            transform: translateY(40px);
-            transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+            transform: translateY(30px);
+            transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
         }
         .reveal.visible {
             opacity: 1;
@@ -190,15 +202,10 @@
         .reveal-delay-2 { transition-delay: 0.2s; }
         .reveal-delay-3 { transition-delay: 0.3s; }
         .reveal-delay-4 { transition-delay: 0.4s; }
-
-        /* ── Float animation for cards ── */
-        .float-subtle {
-            animation: float-subtle 6s ease-in-out infinite;
-        }
     }
 
     /* ════════════════════════════════════════
-       KEYFRAMES — GPU-ACCELERATED
+       KEYFRAMES
        ════════════════════════════════════════ */
 
     @keyframes hero-gradient {
@@ -209,58 +216,47 @@
 
     @keyframes particle-float {
         0% {
-            transform: translate3d(0, 100vh, 0) scale(1) rotate(0deg);
+            transform: translate3d(0, 100vh, 0) scale(1);
             opacity: 0;
         }
-        5% { opacity: 0.15; }
+        5% { opacity: 0.08; }
         50% {
-            transform: translate3d(30px, 50vh, 0) scale(1.2) rotate(180deg);
-            opacity: 0.2;
+            transform: translate3d(20px, 50vh, 0) scale(1.1);
+            opacity: 0.12;
         }
-        95% { opacity: 0.15; }
+        95% { opacity: 0.08; }
         100% {
-            transform: translate3d(60px, -80px, 0) scale(0.5) rotate(360deg);
+            transform: translate3d(40px, -80px, 0) scale(0.6);
             opacity: 0;
         }
     }
 
     @keyframes orb-breathe {
-        0%, 100% { opacity: 0.3; transform: scale(1); }
-        50%      { opacity: 0.7; transform: scale(1.05); }
+        0%, 100% { opacity: 0.25; transform: scale(1); }
+        50%      { opacity: 0.5; transform: scale(1.03); }
     }
 
     @keyframes orb-drift {
         0%   { transform: translate(0, 0); }
-        25%  { transform: translate(30px, -20px); }
-        50%  { transform: translate(-20px, 15px); }
-        75%  { transform: translate(15px, 25px); }
+        25%  { transform: translate(20px, -15px); }
+        50%  { transform: translate(-15px, 10px); }
+        75%  { transform: translate(10px, 18px); }
         100% { transform: translate(0, 0); }
-    }
-
-    @keyframes click-ripple {
-        0% {
-            transform: scale(1);
-            opacity: 0.6;
-        }
-        100% {
-            transform: scale(40);
-            opacity: 0;
-        }
     }
 
     @keyframes bounce {
         0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
-        40%  { transform: translateY(-8px); }
-        60%  { transform: translateY(-4px); }
+        40%  { transform: translateY(-6px); }
+        60%  { transform: translateY(-3px); }
     }
 
     @keyframes pulse {
-        0%, 100% { opacity: 1; transform: scale(1); }
-        50%      { opacity: 0.4; transform: scale(0.9); }
+        0%, 100% { opacity: 1; }
+        50%      { opacity: 0.4; }
     }
 
     @keyframes fade-in-up {
-        from { opacity: 0; transform: translateY(30px); }
+        from { opacity: 0; transform: translateY(20px); }
         to   { opacity: 1; transform: translateY(0); }
     }
 
@@ -269,49 +265,28 @@
         100% { background-position: 200% 0; }
     }
 
-    @keyframes float-subtle {
-        0%, 100% { transform: translateY(0); }
-        50%      { transform: translateY(-6px); }
-    }
-
-    @keyframes glow-pulse {
-        0%, 100% { box-shadow: 0 0 20px rgba(14, 165, 233,0.15); }
-        50%      { box-shadow: 0 0 40px rgba(14, 165, 233,0.3); }
-    }
-
-    @keyframes rotate-slow {
-        from { transform: rotate(0deg); }
-        to   { transform: rotate(360deg); }
-    }
-
-    @keyframes border-dance {
-        0%   { border-color: rgba(14, 165, 233,0.3); }
-        33%  { border-color: rgba(245,197,66,0.3); }
-        66%  { border-color: rgba(244,114,182,0.3); }
-        100% { border-color: rgba(14, 165, 233,0.3); }
-    }
-
-    @keyframes text-glow {
-        0%, 100% { text-shadow: 0 0 20px rgba(14, 165, 233,0.3); }
-        50%      { text-shadow: 0 0 40px rgba(14, 165, 233,0.6); }
-    }
-
     </style>
 </head>
 <body>
+    <!-- Preloader -->
+    <div id="preloader" style="position:fixed;inset:0;background:#050505;z-index:9999;display:flex;align-items:center;justify-content:center;color:#fff;font-family:'Inter', sans-serif;font-size:clamp(3rem, 10vw, 6rem);font-weight:700;transition:transform 1s cubic-bezier(0.7,0,0.3,1), opacity 0.8s ease;">
+      <span id="loading-perc">0</span><span style="font-size:0.6em;opacity:0.5">%</span>
+    </div>
+
     <div id="root"></div>
     
-    <script type="text/babel" src="components/AnimatedBackground.js"></script>
-    <script type="text/babel" src="components/Navbar.js"></script>
-    <script type="text/babel" src="components/InteractiveElements.js"></script>
-    <script type="text/babel" src="components/Hero.js"></script>
-    <script type="text/babel" src="components/About.js"></script>
-    <script type="text/babel" src="components/Skills.js"></script>
-    <script type="text/babel" src="components/Projects.js"></script>
-    <script type="text/babel" src="components/Experience.js"></script>
-    <script type="text/babel" src="components/Contact.js"></script>
-    <script type="text/babel" src="components/Footer.js"></script>
-    <script type="text/babel" src="utils/animations.js"></script>
-    <script type="text/babel" src="app.js"></script>
+    <script src="config.js?v=114"></script>
+    <script type="text/babel" src="components/Navbar.js?v=114"></script>
+    <script type="text/babel" src="components/InteractiveElements.js?v=114"></script>
+    <script type="text/babel" src="components/TerminalOverlay.js?v=114"></script>
+    <script type="text/babel" src="components/Hero.js?v=114"></script>
+    <script type="text/babel" src="components/About.js?v=114"></script>
+    <script type="text/babel" src="components/Skills.js?v=114"></script>
+    <script type="text/babel" src="components/Projects.js?v=114"></script>
+    <script type="text/babel" src="components/Experience.js?v=114"></script>
+    <script type="text/babel" src="components/Contact.js?v=114"></script>
+    <script type="text/babel" src="components/Footer.js?v=114"></script>
+    <script type="text/babel" src="utils/animations.js?v=114"></script>
+    <script type="text/babel" src="app.js?v=114"></script>
 </body>
 </html>

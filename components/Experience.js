@@ -28,130 +28,94 @@ function Experience() {
         }
       });
     }, { threshold: 0.2 });
-    document.querySelectorAll('.exp-item').forEach(el => obs.observe(el));
+    
+    // We observe after data loads and elements are rendered.
+    // Instead of querying raw DOM here, we can rely on standard CSS transitions for the new design 
+    // or just observe `.exp-item` elements directly. Note: since this runs on mount, 
+    // it will be empty initially until data loads. So we need a timeout or observer refresh.
+    // Fixed: we will just use a generic 'reveal' class observer or re-run when data changes.
+    const elements = document.querySelectorAll('.exp-item');
+    elements.forEach(el => obs.observe(el));
     return () => obs.disconnect();
-  }, []);
-
-  const color = (t) => t === 'education' ? '#0ea5e9' : t === 'certification' ? '#f5c542' : '#f472b6';
-  const label = (t) => t === 'education' ? 'Education' : t === 'certification' ? 'Cert' : 'Learning';
+  }, [data]);
 
   try {
     return (
-      <section id="experience" data-name="experience" style={{ padding: '110px 0', background: 'var(--bg-primary)', position: 'relative' }}>
+      <section id="experience" data-name="experience" className="py-32 px-6 md:px-12 bg-background relative selection:bg-primary-fixed selection:text-on-primary-fixed">
         <div className="section-divider" style={{ position: 'absolute', top: 0, left: 0, right: 0 }} />
 
-        <div style={{ maxWidth: '850px', margin: '0 auto', padding: '0 24px' }}>
-          <div className="reveal visible" style={{ textAlign: 'center', marginBottom: '14px' }}>
-            <span style={{ fontFamily: 'monospace', fontSize: '0.75rem', letterSpacing: '3px', color: '#f5c542', textTransform: 'uppercase', opacity: 0.6 }}>// 04. experience</span>
-          </div>
-          <h2 className="reveal visible" style={{ textAlign: 'center', marginBottom: '12px', fontSize: 'clamp(2rem, 5vw, 2.8rem)', fontWeight: 800, color: '#e8e6f0', letterSpacing: '-1px' }}>
-            My Journey
-          </h2>
-          <p className="reveal visible" style={{ textAlign: 'center', color: '#4e4a62', marginBottom: '70px', fontSize: '0.95rem' }}>
-            Education, certifications, and self-directed learning
-          </p>
+        <div className="max-w-[1400px] mx-auto">
+          
+          {/* Header Section */}
+          <section className="mb-24 flex flex-col md:flex-row md:items-end justify-between gap-8 reveal visible">
+            <div className="max-w-2xl">
+              <p className="text-primary-fixed font-body text-xs uppercase tracking-[0.4em] mb-4 font-bold">Credentials . 003</p>
+              <h2 className="font-headline text-[clamp(2.5rem,7vw,5.5rem)] font-light text-primary leading-tight lowercase italic">
+                Certifications <br/>&amp; Education
+              </h2>
+            </div>
+            <div className="hidden md:block w-32 h-[1px] bg-outline-variant opacity-30 mb-4"></div>
+          </section>
 
-          <div style={{ position: 'relative' }}>
-            {/* Vertical line */}
-            <div style={{
-              position: 'absolute', left: '23px', top: '10px', bottom: '10px', width: '2px',
-              background: 'linear-gradient(to bottom, rgba(14, 165, 233,0.3), rgba(245,197,66,0.3))',
-            }} />
-
+          {/* Ledger Content */}
+          <div className="flex flex-col gap-px bg-outline-variant/20">
             {loading ? (
-              <div style={{ paddingLeft: '70px', color: '#8a86a0', fontSize: '0.9rem', fontStyle: 'italic', animation: 'pulse 2s infinite' }}>
-                Fetching certificates...
-              </div>
+              <div className="p-12 text-on-surface-variant font-body text-sm tracking-widest uppercase">Initializing Ledger Data...</div>
             ) : data.length === 0 ? (
-               <div style={{ paddingLeft: '70px', color: '#ff4d4f', fontSize: '0.9rem' }}>
-                 Failed to load data. Please try again later.
-               </div>
+               <div className="p-12 text-error font-body text-sm tracking-widest uppercase">Error establishing connection to ledger</div>
             ) : data.map((item, i) => {
-              const c = color(item.type);
               const show = visibleItems.has(i);
               return (
-                <div key={i} data-idx={i} className="exp-item" style={{
-                  display: 'flex', gap: '22px',
-                  paddingBottom: i < data.length - 1 ? '36px' : '0',
-                  opacity: show ? 1 : 0,
-                  transform: show ? 'translateX(0)' : 'translateX(30px)',
-                  transition: `opacity 0.6s cubic-bezier(0.16,1,0.3,1) ${i * 0.15}s, transform 0.6s cubic-bezier(0.16,1,0.3,1) ${i * 0.15}s`,
-                }}>
-                  {/* Icon */}
-                  <div style={{ flexShrink: 0, width: '48px' }}>
-                    <div className="exp-icon" style={{ '--ec': c }}>
-                      {item.icon}
-                    </div>
+                <div key={i} data-idx={i} className={`exp-item group grid grid-cols-1 md:grid-cols-12 bg-surface-container-low p-8 md:p-12 hover:bg-surface-container-high transition-all duration-500`} style={{ opacity: show ? 1 : 0, transform: show ? 'translateY(0)' : 'translateY(20px)', transition: `opacity 0.7s ${i * 0.1}s, transform 0.7s ${i * 0.1}s` }}>
+                  <div className="md:col-span-1 text-primary-fixed font-body font-bold text-[10px] mb-4 md:mb-0">
+                    0{i + 1}
                   </div>
-
-                  {/* Card */}
-                  <div className="exp-card" style={{ '--ec': c }}>
-                    <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'flex-start', gap: '8px', marginBottom: '6px' }}>
-                      <h3 style={{ fontWeight: 700, fontSize: '0.98rem', color: '#e8e6f0', margin: 0 }}>{item.title}</h3>
-                      <div style={{ display: 'flex', gap: '6px', flexShrink: 0 }}>
-                        <span className="exp-badge" style={{ '--ebc': c }}>{label(item.type)}</span>
-                        <span style={{ fontFamily: 'monospace', fontSize: '0.72rem', color: '#6b6880', fontWeight: 600 }}>{item.year}</span>
-                      </div>
-                    </div>
-                    <div style={{ color: c, fontSize: '0.82rem', fontWeight: 600, marginBottom: '8px' }}>{item.org}</div>
-                    <p style={{ color: '#8a86a0', fontSize: '0.82rem', lineHeight: 1.7, margin: 0 }}>{item.desc}</p>
+                  <div className="md:col-span-7 pr-8">
+                    <h3 className="font-body font-bold text-sm uppercase tracking-[0.3em] text-on-surface mb-2">{item.org}</h3>
+                    <p className="font-headline text-3xl text-primary font-light">{item.title}</p>
+                    <p className="font-body text-sm text-on-surface-variant leading-relaxed mt-4 hidden group-hover:block transition-opacity opacity-0 group-hover:opacity-100">{item.desc}</p>
+                  </div>
+                  <div className="md:col-span-3 flex flex-col justify-center gap-2 mt-6 md:mt-0 border-t md:border-t-0 md:border-l border-outline-variant/20 pt-4 md:pt-0 md:pl-8">
+                    <span className="text-[10px] font-body font-bold uppercase tracking-widest text-on-surface-variant">Type: {item.type}</span>
+                    <span className="text-[10px] font-body font-bold uppercase tracking-widest text-on-surface-variant">Timeline: {item.year}</span>
+                  </div>
+                  <div className="md:col-span-1 flex items-center justify-end mt-4 md:mt-0">
+                    <span className="material-symbols-outlined text-primary-fixed opacity-0 group-hover:opacity-100 transition-opacity transform group-hover:scale-110 duration-500">
+                      {item.type === 'education' ? 'school' : item.type === 'certification' ? 'workspace_premium' : 'arrow_outward'}
+                    </span>
                   </div>
                 </div>
               );
             })}
           </div>
 
-          <div className="reveal visible" style={{ textAlign: 'center', marginTop: '56px' }}>
-            <div style={{
-              display: 'inline-flex', alignItems: 'center', gap: '10px',
-              padding: '10px 24px', borderRadius: '100px',
-              background: 'rgba(245,197,66,0.06)', border: '1px solid rgba(245,197,66,0.12)',
-              fontSize: '0.82rem', color: '#6b6880',
-            }}>
-              <span style={{ fontSize: '1rem' }}>🚀</span>
-              Building my DevOps journey — one pipeline at a time
+          {/* Visual Anchor / Decorative Element */}
+          <section className="mt-32 grid grid-cols-1 md:grid-cols-2 gap-24 items-center reveal visible">
+            <div className="relative h-64 bg-surface-container-highest flex items-center justify-center overflow-hidden group">
+              <div className="absolute inset-0 bg-gradient-to-br from-primary-fixed/10 to-transparent"></div>
+              <img alt="Architectural detail" className="w-full h-full object-cover grayscale opacity-40 mix-blend-overlay group-hover:scale-105 transition-transform duration-1000" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCsK8fLh0E1_AV-YXabBk_Dh1r-u4KZ5qodL4Nw6mwNDYEBFkXKCAOqfyFXX2PWwHO-zgx9Ge16eLcNw-4ssKEa6yLu0FlRabg7atHHy56Vu6N-GzIYmKrWHNpcDZZ8rBu4mg4x4pLNEe3J8RuftiYv7ulrXPM6lUVhsXgF7gl_Pve4rCHDBTHbNJV52V7f6dzai4Q6vtQaHK7T13zcnU4-OyB1ldAF0oHv3PGJngwh64NW57zN-QtrS8QeR5WreG_G05I49qKE8ik" />
+              <div className="relative z-10 p-12 border border-primary-fixed/20 backdrop-blur-sm">
+                <p className="font-headline italic text-white text-xl">"Structural integrity in code as in stone."</p>
+              </div>
             </div>
-          </div>
+            
+            <div className="reveal visible">
+              <h4 className="font-body font-bold text-[10px] uppercase tracking-[0.4em] text-primary-fixed mb-6">Continuous Development</h4>
+              <p className="font-body text-on-surface-variant leading-relaxed text-sm max-w-sm">
+                The pursuit of technical excellence is an iterative process. Each credential represents a milestone in the systematic mastery of cloud infrastructure and operational efficiency.
+              </p>
+              
+              <div className="mt-8 flex flex-wrap gap-2">
+                <span className="bg-surface-container-highest text-on-surface px-3 py-1 text-[10px] font-body tracking-widest uppercase">AWS-CLF</span>
+                <span className="bg-surface-container-highest text-on-surface px-3 py-1 text-[10px] font-body tracking-widest uppercase">TF-ASSOC</span>
+                <span className="bg-surface-container-highest text-on-surface px-3 py-1 text-[10px] font-body tracking-widest uppercase">LNX-SYSADMIN</span>
+                <span className="bg-surface-container-highest text-on-surface px-3 py-1 text-[10px] font-body tracking-widest uppercase">DOCKER-CNTR</span>
+              </div>
+            </div>
+          </section>
+
         </div>
-
         <div className="section-divider" style={{ position: 'absolute', bottom: 0, left: 0, right: 0 }} />
-
-        <style>{`
-          .exp-icon {
-            width: 46px; height: 46px; border-radius: 50%;
-            background: color-mix(in srgb, var(--ec) 12%, transparent);
-            border: 2px solid color-mix(in srgb, var(--ec) 35%, transparent);
-            display: flex; align-items: center; justify-content: center;
-            font-size: 1.2rem;
-            box-shadow: 0 0 20px color-mix(in srgb, var(--ec) 20%, transparent);
-            position: relative; z-index: 1;
-            transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
-          }
-          .exp-item:hover .exp-icon {
-            transform: scale(1.1);
-            background: color-mix(in srgb, var(--ec) 20%, transparent);
-            box-shadow: 0 0 30px color-mix(in srgb, var(--ec) 30%, transparent);
-          }
-          .exp-card {
-            flex: 1; padding: 20px 22px; border-radius: 14px;
-            background: rgba(14, 165, 233,0.03);
-            border: 1px solid rgba(14, 165, 233,0.06);
-            transition: transform 0.3s ease, background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
-          }
-          .exp-item:hover .exp-card {
-            transform: translateX(6px);
-            background: rgba(14, 165, 233,0.06);
-            border-color: color-mix(in srgb, var(--ec) 30%, transparent);
-            box-shadow: 0 8px 30px rgba(0,0,0,0.3);
-          }
-          .exp-badge {
-            font-size: 0.65rem; font-weight: 700; padding: 2px 8px; border-radius: 100px;
-            background: color-mix(in srgb, var(--ebc) 12%, transparent);
-            color: var(--ebc);
-            border: 1px solid color-mix(in srgb, var(--ebc) 25%, transparent);
-            text-transform: uppercase; letter-spacing: 0.5px;
-          }
-        `}</style>
       </section>
     );
   } catch (error) {

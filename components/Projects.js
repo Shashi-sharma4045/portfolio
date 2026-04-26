@@ -1,186 +1,201 @@
-function Projects() {
-  const [filter, setFilter] = React.useState('All');
-  const [visible, setVisible] = React.useState(false);
-  const [projects, setProjects] = React.useState([]);
-  const [loading, setLoading] = React.useState(true);
-  const ref = React.useRef(null);
+function DraggableCard({ project, boundaryRef, initialPos, zIndex, onPushFront }) {
+  const [pos, setPos] = React.useState(initialPos);
+  const [isDragging, setIsDragging] = React.useState(false);
+  const offset = React.useRef({ x: 0, y: 0 });
+  const cardRef = React.useRef(null);
 
   React.useEffect(() => {
-    const obs = new IntersectionObserver(([e]) => { if (e.isIntersecting) setVisible(true); }, { threshold: 0.08 });
-    if (ref.current) obs.observe(ref.current);
-    return () => obs.disconnect();
+    const handleResize = () => {
+      if (!boundaryRef.current || !cardRef.current) return;
+      const bRect = boundaryRef.current.getBoundingClientRect();
+      const cRect = cardRef.current.getBoundingClientRect();
+      setPos(prev => ({
+        x: Math.min(prev.x, Math.max(0, bRect.width - cRect.width)),
+        y: Math.min(prev.y, Math.max(0, bRect.height - cRect.height))
+      }));
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
   }, []);
 
+  const handlePointerDown = (e) => {
+    e.target.setPointerCapture(e.pointerId);
+    setIsDragging(true);
+    onPushFront();
+    const rect = cardRef.current.getBoundingClientRect();
+    offset.current = {
+      x: e.clientX - rect.left,
+      y: e.clientY - rect.top
+    };
+  };
+
+  const handlePointerMove = (e) => {
+    if (!isDragging || !boundaryRef.current || !cardRef.current) return;
+    const boundaryRect = boundaryRef.current.getBoundingClientRect();
+    let newX = e.clientX - boundaryRect.left - offset.current.x;
+    let newY = e.clientY - boundaryRect.top - offset.current.y;
+    
+    const cardRect = cardRef.current.getBoundingClientRect();
+    if (newX < 0) newX = 0;
+    if (newY < 0) newY = 0;
+    if (newX + cardRect.width > boundaryRect.width) newX = boundaryRect.width - cardRect.width;
+    if (newY + cardRect.height > boundaryRect.height) newY = boundaryRect.height - cardRect.height;
+    
+    setPos({ x: newX, y: newY });
+  };
+
+  const handlePointerUp = (e) => {
+    setIsDragging(false);
+  };
+
+  return (
+    <div
+      ref={cardRef}
+      onPointerDown={handlePointerDown}
+      onPointerMove={handlePointerMove}
+      onPointerUp={handlePointerUp}
+      onPointerCancel={handlePointerUp}
+      style={{
+        position: 'absolute', 
+        left: pos.x, 
+        top: pos.y, 
+        zIndex: zIndex,
+        touchAction: 'none'
+      }}
+      className={`w-[300px] md:w-[380px] border bg-[#131313] transition-colors duration-300 group flex flex-col justify-between
+        ${isDragging ? 'shadow-2xl shadow-[#bcff00]/10 cursor-grabbing border-[#bcff00]/40' : 'cursor-grab border-white/10 hover:border-white/20'}`}
+    >
+      <div className="p-6 border-b border-white/10 bg-[#1c1b1b]">
+        <div className="flex justify-between items-start mb-4">
+          <span className="text-[#bcff00] text-[10px] uppercase tracking-[0.2em] font-body bg-[#131313] px-2 py-1 border border-[#bcff00]/20">
+            {project.cat}
+          </span>
+          <a href={project.link} target="_blank" rel="noopener noreferrer" className="text-white/40 hover:text-[#bcff00] transition-colors">
+            <span className="material-symbols-outlined text-sm">open_in_new</span>
+          </a>
+        </div>
+        <h3 className="font-headline text-2xl font-light text-white uppercase tracking-tight">{project.title}</h3>
+      </div>
+      
+      <div className="p-6 flex-grow pointer-events-none">
+        <p className="font-body text-white/50 text-xs tracking-wide leading-relaxed line-clamp-3">
+          {project.desc}
+        </p>
+      </div>
+
+      <div className="p-4 border-t border-white/10 flex items-center gap-2 pointer-events-none">
+        {project.tags.slice(0,2).map(tag => (
+           <span key={tag} className="text-xs font-body text-on-surface-variant bg-surface-container-highest px-2 py-1 border border-white/5 uppercase">
+             {tag}
+           </span>
+        ))}
+        {project.status === 'Active' && <span className="ml-auto flex h-2 w-2 relative">
+          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#bcff00] opacity-75"></span>
+          <span className="relative inline-flex rounded-full h-2 w-2 bg-[#bcff00]"></span>
+        </span>}
+      </div>
+    </div>
+  );
+}
+
+window.Projects = function Projects() {
+  const [filter, setFilter] = React.useState('All');
+  const [projects, setProjects] = React.useState([]);
+  const [loading, setLoading] = React.useState(true);
+  const [topZIndex, setTopZIndex] = React.useState(10);
+  
+  const boundaryRef = React.useRef(null);
+
   React.useEffect(() => {
-    // 1. Fetch GitHub Repositories
     const fetchGitHub = fetch('https://api.github.com/users/shashi232/repos?sort=updated&per_page=6')
-      .then(res => {
-        if (!res.ok) throw new Error('GitHub API Error');
-        return res.json();
-      })
-      .then(repos => {
-        return repos.map(repo => ({
+      .then(res => res.ok ? res.json() : [])
+      .then(repos => repos.map(repo => ({
           title: repo.name,
-          desc: repo.description || 'A project hosted on GitHub.',
+          desc: repo.description || `${repo.language ? repo.language + ' project' : 'Project'} — ${repo.stargazers_count} stars, ${repo.forks_count} forks`,
           tags: repo.language ? [repo.language, 'GitHub'] : ['GitHub'],
           cat: 'GitHub',
           status: 'Active',
-          statusColor: '#22c55e',
-          icon: '💻',
-          color: '#818cf8',
           link: repo.html_url
-        }));
-      })
-      .catch(err => {
-        console.error('Failed fetching GitHub repos:', err);
-        return []; // return empty on failure so Promise.all doesn't crash
-      });
+      }))).catch(() => []);
 
-    // 2. Fetch LinkedIn Mock Activity
     const fetchLinkedIn = fetch('data/linkedin.json')
-      .then(res => {
-        if (!res.ok) throw new Error('LinkedIn Mock API Error');
-        return res.json();
-      })
-      .catch(err => {
-        console.error('Failed fetching LinkedIn mock data:', err);
-        return [];
-      });
+      .then(res => res.ok ? res.json() : [])
+      .catch(() => []);
 
-    // Resolve both API calls, merge the arrays, and update state
     Promise.all([fetchGitHub, fetchLinkedIn]).then(([ghData, liData]) => {
-      // Interleave or combine data
-      setProjects([...ghData, ...liData]);
+      const merged = [...ghData, ...liData].map((p, i) => {
+        const padding = 50; 
+        const cellWidth = 400;
+        const cellHeight = 300;
+        const cols = Math.max(1, Math.floor((window.innerWidth || 1000 - padding * 2) / cellWidth));
+        const row = Math.floor(i / cols);
+        const col = i % cols;
+        return {
+           ...p,
+           id: Math.random().toString(),
+           initialPos: { 
+             x: padding + col * (cellWidth * 0.9) + (Math.random() * 40 - 20), 
+             y: padding + row * (cellHeight * 0.9) + (Math.random() * 40 - 20)
+           },
+           z: 10 + i
+        };
+      });
+      setProjects(merged);
       setLoading(false);
     });
   }, []);
 
   const filters = ['All', 'GitHub', 'LinkedIn'];
-
   const filtered = filter === 'All' ? projects : projects.filter(p => p.cat === filter);
+
+  const bringToFront = (id) => {
+    setTopZIndex(z => z + 1);
+    setProjects(prev => prev.map(p => p.id === id ? { ...p, z: topZIndex + 1 } : p));
+  };
 
   try {
     return (
-      <section id="projects" ref={ref} data-name="projects" style={{ padding: '110px 0', background: 'var(--bg-secondary)', position: 'relative' }}>
+      <section id="projects" data-name="projects" className="py-24 bg-[#0e0e0e] relative min-h-[1000px] flex flex-col overflow-hidden">
         <div className="section-divider" style={{ position: 'absolute', top: 0, left: 0, right: 0 }} />
+        
+        <div className="relative z-0 px-6 md:px-12 pointer-events-none">
+          <h2 className="font-headline mb-4 text-[clamp(2.5rem,6vw,5rem)] font-thin text-white tracking-tighter uppercase opacity-20">
+            Active<br/>Nodes
+          </h2>
+          <p className="font-body text-[#bcff00] text-xs tracking-widest uppercase mb-12">
+            Interactive Deployment Workspace — Move Nodes freely.
+          </p>
+        </div>
+        
+        <div className="relative z-10 px-6 md:px-12 flex gap-4 mb-8 flex-wrap">
+          {filters.map(f => (
+            <button key={f} onClick={() => setFilter(f)} 
+               className={`px-6 py-2 border font-body text-[10px] tracking-widest uppercase transition-colors duration-300 ${filter === f ? 'bg-[#bcff00] text-[#131313] border-[#bcff00]' : 'bg-transparent text-white/50 border-white/10 hover:border-white/40'}`}>
+              {f}
+            </button>
+          ))}
+        </div>
 
-        <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 24px' }}>
-          <div className={`reveal ${visible ? 'visible' : ''}`}>
-            <div style={{ textAlign: 'center', marginBottom: '14px' }}>
-              <span style={{ fontFamily: 'monospace', fontSize: '0.75rem', letterSpacing: '3px', color: '#f472b6', textTransform: 'uppercase', opacity: 0.6 }}>// 03. projects</span>
-            </div>
-            <h2 style={{ textAlign: 'center', marginBottom: '12px', fontSize: 'clamp(2rem, 5vw, 2.8rem)', fontWeight: 800, color: '#e8e6f0', letterSpacing: '-1px' }}>
-              What I'm Building
-            </h2>
-            <p style={{ textAlign: 'center', color: '#4e4a62', marginBottom: '40px', fontSize: '0.95rem' }}>
-              Pulling live repository data from GitHub & LinkedIn activity
-            </p>
-
-            {/* Filters */}
-            <div style={{ display: 'flex', justifyContent: 'center', gap: '8px', marginBottom: '48px', flexWrap: 'wrap' }}>
-              {filters.map(f => (
-                <button key={f} onClick={() => setFilter(f)} className={`proj-filter ${filter === f ? 'active' : ''}`}>
-                  {f}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {/* Grid */}
-          {loading ? (
-             <div style={{ textAlign: 'center', color: '#8a86a0', fontStyle: 'italic', padding: '60px', animation: 'pulse 2s infinite' }}>
-                Fetching Live Data from GitHub and LinkedIn API...
-             </div>
-          ) : (
-            <div className="proj-grid">
-              {filtered.map((p, i) => (
-                <div key={i} className={`proj-card flex flex-col reveal ${visible ? 'visible' : ''}`} style={{
-                  '--pc': p.color,
-                  transitionDelay: `${0.1 + (i % 3) * 0.1}s`,
-                }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '14px' }}>
-                    <span style={{ fontSize: '1.8rem', lineHeight: 1 }}>{p.icon}</span>
-                    <span className="proj-status" style={{ '--psc': p.statusColor }}>{p.status}</span>
-                  </div>
-                  <h3 style={{ fontWeight: 700, fontSize: '1.05rem', color: '#e8e6f0', marginBottom: '10px', lineHeight: 1.35, wordBreak: 'break-word' }}>
-                    {p.title}
-                  </h3>
-                  <p style={{ fontSize: '0.82rem', color: '#6b6880', lineHeight: 1.7, marginBottom: '18px', flexGrow: 1 }}>
-                    {p.desc}
-                  </p>
-                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', marginBottom: '18px' }}>
-                    {p.tags.map(t => (
-                      <span key={t} className="proj-tag" style={{ '--ptc': p.color }}>{t}</span>
-                    ))}
-                  </div>
-                  <div style={{ paddingTop: '14px', borderTop: '1px solid rgba(14, 165, 233,0.06)' }}>
-                    <a href={p.link} target="_blank" rel="noopener noreferrer" className="proj-link" style={{ '--plc': p.color }}>
-                      <div className={`icon-${p.cat === 'GitHub' ? 'github' : 'link'}`} style={{ fontSize: '0.9rem' }} /> 
-                      {p.cat === 'GitHub' ? 'View Repo' : 'View Post'}
-                    </a>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
+        <div ref={boundaryRef} className="relative flex-grow w-full h-full mx-auto" style={{ minHeight: '800px' }}>
+            {loading ? (
+              <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                 <p className="font-body text-[#bcff00] text-sm uppercase tracking-widest animate-pulse">Initializing Interface...</p>
+              </div>
+            ) : (
+              filtered.map((p) => (
+                <DraggableCard 
+                  key={p.id}
+                  project={p}
+                  boundaryRef={boundaryRef}
+                  initialPos={p.initialPos}
+                  zIndex={p.z}
+                  onPushFront={() => bringToFront(p.id)}
+                />
+              ))
+            )}
         </div>
 
         <div className="section-divider" style={{ position: 'absolute', bottom: 0, left: 0, right: 0 }} />
-
-        <style>{`
-          .proj-grid {
-            display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 20px;
-          }
-          .proj-filter {
-            padding: 7px 18px; border-radius: 100px; border: none;
-            font-size: 0.8rem; font-weight: 600; cursor: pointer;
-            background: rgba(14, 165, 233,0.05); color: #8a86a0;
-            font-family: 'Inter', sans-serif;
-            transition: all 0.2s ease;
-          }
-          .proj-filter:hover { background: rgba(14, 165, 233,0.1); color: #e8e6f0; }
-          .proj-filter.active {
-            background: linear-gradient(135deg, #0ea5e9, #f5c542);
-            color: #0a0a12; box-shadow: 0 3px 15px rgba(14, 165, 233,0.25);
-          }
-
-          .proj-card {
-            border-radius: 16px; padding: 26px;
-            background: rgba(14, 165, 233,0.03);
-            border: 1px solid rgba(14, 165, 233,0.06);
-            display: flex; flex-direction: column;
-            transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease, opacity 0.8s cubic-bezier(0.16,1,0.3,1);
-          }
-          .proj-card:hover {
-            transform: translateY(-6px);
-            border-color: var(--pc, rgba(14, 165, 233,0.2));
-            box-shadow: 0 18px 55px rgba(0,0,0,0.4);
-          }
-
-          .proj-status {
-            font-size: 0.66rem; font-weight: 700; letter-spacing: 0.5px;
-            padding: 3px 10px; border-radius: 100px;
-            background: color-mix(in srgb, var(--psc) 12%, transparent);
-            color: var(--psc);
-            border: 1px solid color-mix(in srgb, var(--psc) 25%, transparent);
-            text-transform: uppercase; font-family: 'Inter', sans-serif;
-          }
-
-          .proj-tag {
-            padding: 2px 8px; border-radius: 5px;
-            background: color-mix(in srgb, var(--ptc) 8%, transparent);
-            color: var(--ptc);
-            border: 1px solid color-mix(in srgb, var(--ptc) 18%, transparent);
-            font-size: 0.7rem; font-weight: 600; font-family: monospace;
-          }
-
-          .proj-link {
-            display: inline-flex; align-items: center; gap: 6px;
-            color: #8a86a0; text-decoration: none; font-size: 0.78rem;
-            font-weight: 500; transition: color 0.2s ease;
-          }
-          .proj-link:hover { color: var(--plc, #0ea5e9); }
-        `}</style>
       </section>
     );
   } catch (error) {

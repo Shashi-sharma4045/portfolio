@@ -1,0 +1,15 @@
+# Environment variables — never commit secrets
+.env
+
+# Generated at deploy time from GitHub Secret
+config.js
+
+# Node
+node_modules/
+
+# Dev-only Stitch design references
+stitch_*.html
+
+# OS artifacts
+.DS_Store
+Thumbs.db

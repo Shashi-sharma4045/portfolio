@@ -8,126 +8,95 @@ function About() {
     return () => obs.disconnect();
   }, []);
 
-  const focuses = [
-    { icon: '🐳', title: 'Containerization', desc: 'Docker & Kubernetes for scalable, portable deployment', color: '#0ea5e9' },
-    { icon: '☁️', title: 'Cloud Infrastructure', desc: 'AWS & GCP architecture — EC2, S3, Lambda, IAM', color: '#f5c542' },
-    { icon: '⚙️', title: 'CI/CD Automation', desc: 'Jenkins, GitHub Actions, zero-downtime deploys', color: '#f472b6' },
-    { icon: '📊', title: 'Monitoring & Ops', desc: 'Prometheus, Grafana, alerting & log aggregation', color: '#e8985a' },
-  ];
-
-  const stats = [
-    { val: '2+', label: 'Years Learning', icon: '📅' },
-    { val: '10+', label: 'Tools Mastered', icon: '🛠️' },
-    { val: '4+', label: 'Certifications', icon: '🏆' },
-    { val: '∞', label: 'Curiosity', icon: '🚀' },
-  ];
-
   try {
     return (
-      <section id="about" ref={ref} data-name="about" style={{ padding: '110px 0', background: 'var(--bg-secondary)', position: 'relative' }}>
-        <div className="section-divider" style={{ position: 'absolute', top: 0, left: 0, right: 0 }} />
-
-        <div style={{ maxWidth: '1100px', margin: '0 auto', padding: '0 24px' }}>
-          <div className={`reveal ${visible ? 'visible' : ''}`}>
-            <div style={{ textAlign: 'center', marginBottom: '14px' }}>
-              <span style={{ fontFamily: 'monospace', fontSize: '0.75rem', letterSpacing: '3px', color: '#0ea5e9', textTransform: 'uppercase', opacity: 0.6 }}>// 01. about me</span>
-            </div>
-            <h2 style={{ textAlign: 'center', marginBottom: '64px', fontSize: 'clamp(2rem, 5vw, 2.8rem)', fontWeight: 800, color: '#e8e6f0', letterSpacing: '-1px' }}>
-              Who Am I?
-            </h2>
-          </div>
-
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '56px', alignItems: 'start', marginBottom: '72px' }}>
-            <div className={`reveal ${visible ? 'visible' : ''} reveal-delay-1`}>
-              {[
-                <React.Fragment key="a">I'm <strong style={{ color: '#e8e6f0' }}>Shashi Kant Sharma</strong>, a Computer Science Engineering student at <strong style={{ color: '#0ea5e9' }}>Amity University Jaipur</strong>, passionately building a career in DevOps and cloud infrastructure.</React.Fragment>,
-                "I love bridging the gap between development and operations — from writing Terraform configs and orchestrating containers with Kubernetes, to setting up CI/CD pipelines that deploy code with zero downtime.",
-                "When I'm not automating things, I'm exploring new AWS services, tinkering with Linux systems, or contributing to open-source projects.",
-              ].map((para, i) => (
-                <p key={i} style={{ color: '#7a7590', fontSize: '0.98rem', lineHeight: 1.85, marginBottom: '20px' }}>
-                  {para}
-                </p>
-              ))}
-
-              <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap', marginTop: '28px' }}>
-                <a href="https://github.com/shashi232" target="_blank" rel="noopener noreferrer" className="about-btn-fill">
-                  <div className="icon-github" /> View GitHub
-                </a>
-                <a href="https://linkedin.com/in/shashi-kant-sharma-a338a5318" target="_blank" rel="noopener noreferrer" className="about-btn-outline">
-                  <div className="icon-linkedin" /> LinkedIn
-                </a>
-              </div>
-            </div>
-
-            <div className={`reveal ${visible ? 'visible' : ''} reveal-delay-2`} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
-              {focuses.map((f, i) => (
-                <div key={i} className="about-focus-card" style={{ '--fc': f.color }}>
-                  <span style={{ fontSize: '1.4rem', lineHeight: 1 }}>{f.icon}</span>
-                  <div>
-                    <div style={{ fontWeight: 700, fontSize: '0.9rem', color: f.color, marginBottom: '3px' }}>{f.title}</div>
-                    <div style={{ fontSize: '0.82rem', color: '#6b6880', lineHeight: 1.55 }}>{f.desc}</div>
-                  </div>
+      <section id="about" ref={ref} data-name="about" className="px-6 md:px-16 py-32 bg-surface-container-lowest relative">
+        <div className={`max-w-7xl mx-auto reveal ${visible ? 'visible' : ''}`}>
+          
+          <div className="flex flex-col md:flex-row gap-16 md:gap-24 items-center">
+            
+            {/* Architectural Image Container */}
+            <div className={`relative w-full md:w-[400px] aspect-[4/5] group flex-shrink-0 reveal reveal-delay-1 ${visible ? 'visible' : ''}`}>
+              <div className="absolute inset-0 border border-white/10 translate-x-4 translate-y-4 transition-transform duration-500 group-hover:translate-x-6 group-hover:translate-y-6"></div>
+              <div className="absolute inset-0 border border-primary-fixed/20 -translate-x-2 -translate-y-2 transition-transform duration-500 group-hover:-translate-x-4 group-hover:-translate-y-4"></div>
+              <div className="relative h-full w-full bg-surface-container overflow-hidden">
+                {/* User's profile photo restored here! */}
+                <img 
+                  src="assets/profile.png" 
+                  alt="Architect Profile" 
+                  onError={(e) => { e.target.src = "https://lh3.googleusercontent.com/aida-public/AB6AXuBlK36xc7hpOhq8fJV15tu68qsb3ugkpDValzAePBXic3-CqUzKT_dqFUlEHALoXxXAON66x5FStwY_emFRKKwtgPF3u7eZvfHflXHn28-ZIh_r6Ykm47z1NAKgMM16xR-aoQg_ac7wv3EyWjImg41BuwvTf-st_A5IlLryqW7OtrJ80KIO8ZiNWbOyLPH6c9XoPSbAvqGN1YRDTKEFm3S5rmpp74krTAt7SVQQ4zQGfMHHHiOih3PtJ3BsWENE96oMIL-JWEECo3Y"; }}
+                  className="w-full h-full object-cover transition-all duration-700 scale-100 group-hover:scale-105" 
+                />
+                
+                <div className="absolute bottom-0 right-0 bg-primary-fixed text-on-primary-fixed px-4 py-2 font-body text-[10px] font-black tracking-widest">
+                  EST. {new Date().getFullYear()}
                 </div>
-              ))}
+              </div>
+            </div>
+
+            {/* Philosophy & Manifesto Content */}
+            <div className="flex-1 space-y-12">
+              <div className="space-y-6">
+                <span className="font-body text-primary-fixed text-xs tracking-[0.5em] uppercase block">THE MANIFESTO</span>
+                <div className="inline-block border-l-2 border-primary-fixed pl-6 mb-6">
+                  <h2 className="font-headline text-3xl md:text-5xl font-light text-white leading-snug">
+                    "CODE IS FLEETING.<br/>
+                    INFRASTRUCTURE IS <span className="text-primary-fixed italic font-medium">PERMANENT.</span>"
+                  </h2>
+                </div>
+                <p className="font-body text-base leading-relaxed text-white/70 max-w-xl text-justify">
+                  In a world of ephemeral software, I focus on the monolithic stability of systems. My approach merges DevOps rigor with architectural aesthetics, ensuring that the invisible bones of your platform are as beautiful and reliable as the interface. I treat deployment pipelines like brutalist cathedrals—heavy, permanent, and inherently functional.
+                </p>
+                
+                <div className="flex flex-wrap gap-2 pt-4">
+                  <span className="bg-surface-container-highest px-3 py-1.5 text-[10px] font-body text-white/80 tracking-widest uppercase border border-white/5">Kubernetes</span>
+                  <span className="bg-surface-container-highest px-3 py-1.5 text-[10px] font-body text-white/80 tracking-widest uppercase border border-white/5">Terraform</span>
+                  <span className="bg-surface-container-highest px-3 py-1.5 text-[10px] font-body text-white/80 tracking-widest uppercase border border-white/5">AWS</span>
+                  <span className="bg-surface-container-highest px-3 py-1.5 text-[10px] font-body text-white/80 tracking-widest uppercase border border-white/5">CI/CD Automation</span>
+                </div>
+              </div>
             </div>
           </div>
-
-          <div className={`reveal ${visible ? 'visible' : ''} reveal-delay-3`} style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: '16px' }}>
-            {stats.map((s, i) => (
-              <div key={i} className="about-stat-card" style={{ animationDelay: `${i * 0.5}s` }}>
-                <div style={{ fontSize: '1.5rem', marginBottom: '6px' }}>{s.icon}</div>
-                <div style={{ fontFamily: "'Outfit', sans-serif", fontSize: '2rem', fontWeight: 800, color: '#0ea5e9', lineHeight: 1 }}>{s.val}</div>
-                <div style={{ fontSize: '0.75rem', color: '#4e4a62', marginTop: '6px', letterSpacing: '0.5px' }}>{s.label}</div>
-              </div>
-            ))}
+          
+          {/* Methodologies Grid (The 4 properties previously in About.js) */}
+          <div className={`grid grid-cols-2 md:grid-cols-4 gap-[1px] mt-24 bg-white/10 border-y border-white/10 reveal reveal-delay-2 ${visible ? 'visible' : ''}`}>
+            <div className="bg-background p-8 md:p-10 aspect-square flex flex-col justify-between group cursor-pointer hover:bg-surface-container-highest transition-colors duration-500">
+               <span className="text-primary-fixed font-body text-xs font-bold tracking-widest">01</span>
+               <div>
+                  <div className="icon-box text-primary-fixed text-3xl mb-4 group-hover:-translate-y-2 transition-transform duration-500" />
+                  <span className="font-body text-[10px] tracking-widest uppercase text-white/60 group-hover:text-white transition-colors duration-300">SCALABILITY</span>
+               </div>
+            </div>
+             
+            <div className="bg-background p-8 md:p-10 aspect-square flex flex-col justify-between group cursor-pointer hover:bg-surface-container-highest transition-colors duration-500">
+               <span className="text-primary-fixed font-body text-xs font-bold tracking-widest">02</span>
+               <div>
+                  <div className="icon-shield text-primary-fixed text-3xl mb-4 group-hover:-translate-y-2 transition-transform duration-500" />
+                  <span className="font-body text-[10px] tracking-widest uppercase text-white/60 group-hover:text-white transition-colors duration-300">HARDENING</span>
+               </div>
+            </div>
+             
+            <div className="bg-background p-8 md:p-10 aspect-square flex flex-col justify-between group cursor-pointer hover:bg-surface-container-highest transition-colors duration-500">
+               <span className="text-primary-fixed font-body text-xs font-bold tracking-widest">03</span>
+               <div>
+                  <div className="icon-zap text-primary-fixed text-3xl mb-4 group-hover:-translate-y-2 transition-transform duration-500" />
+                  <span className="font-body text-[10px] tracking-widest uppercase text-white/60 group-hover:text-white transition-colors duration-300">VELOCITY</span>
+               </div>
+            </div>
+             
+            <div className="bg-background p-8 md:p-10 aspect-square flex flex-col justify-between group cursor-pointer hover:bg-surface-container-highest transition-colors duration-500">
+               <span className="text-primary-fixed font-body text-xs font-bold tracking-widest">04</span>
+               <div>
+                  <div className="icon-cloud text-primary-fixed text-3xl mb-4 group-hover:-translate-y-2 transition-transform duration-500" />
+                  <span className="font-body text-[10px] tracking-widest uppercase text-white/60 group-hover:text-white transition-colors duration-300">AVAILABILITY</span>
+               </div>
+            </div>
           </div>
+          
         </div>
-
-        <div className="section-divider" style={{ position: 'absolute', bottom: 0, left: 0, right: 0 }} />
-
-        <style>{`
-          .about-btn-fill {
-            display: inline-flex; align-items: center; gap: 8px;
-            padding: 10px 22px; border-radius: 10px; font-size: 0.85rem; font-weight: 700;
-            background: linear-gradient(135deg, #0ea5e9, #f5c542); color: #0a0a12;
-            text-decoration: none; box-shadow: 0 3px 20px rgba(14, 165, 233,0.25);
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-          }
-          .about-btn-fill:hover { transform: translateY(-2px); box-shadow: 0 6px 35px rgba(14, 165, 233,0.4); }
-
-          .about-btn-outline {
-            display: inline-flex; align-items: center; gap: 8px;
-            padding: 10px 22px; border-radius: 10px; font-size: 0.85rem; font-weight: 600;
-            border: 1.5px solid rgba(14, 165, 233,0.2); color: #0ea5e9;
-            background: rgba(14, 165, 233,0.05); text-decoration: none;
-            transition: transform 0.2s ease, background 0.2s ease, border-color 0.2s ease;
-          }
-          .about-btn-outline:hover { transform: translateY(-2px); background: rgba(14, 165, 233,0.1); border-color: rgba(14, 165, 233,0.4); }
-
-          .about-focus-card {
-            padding: 16px 18px; border-radius: 12px;
-            background: rgba(14, 165, 233,0.03); border: 1px solid rgba(14, 165, 233,0.06);
-            display: flex; gap: 14px; align-items: flex-start;
-            transition: transform 0.25s ease, background 0.25s ease, border-color 0.25s ease;
-          }
-          .about-focus-card:hover {
-            background: rgba(14, 165, 233,0.06);
-            border-color: var(--fc, rgba(14, 165, 233,0.15));
-            transform: translateX(6px);
-          }
-
-          .about-stat-card {
-            text-align: center; padding: 26px 16px; border-radius: 14px;
-            background: rgba(14, 165, 233,0.04); border: 1px solid rgba(14, 165, 233,0.08);
-            transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
-            animation: float-subtle 6s ease-in-out infinite;
-          }
-          .about-stat-card:hover {
-            transform: translateY(-5px);
-            border-color: rgba(14, 165, 233,0.2);
-            box-shadow: 0 10px 35px rgba(14, 165, 233,0.1);
-          }
-        `}</style>
+        
+        {/* Accent Element */}
+        <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[1px] h-20 bg-gradient-to-b from-primary-fixed to-transparent opacity-50"></div>
       </section>
     );
   } catch (error) {

@@ -13,108 +13,87 @@ function Footer() {
 
   try {
     return (
-      <footer data-name="footer" style={{ position: 'relative' }}>
-        <div className="section-divider" />
-        <div style={{ background: 'var(--bg-primary)', padding: '56px 0 0' }}>
-          <div style={{ maxWidth: '1100px', margin: '0 auto', padding: '0 24px' }}>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '44px', marginBottom: '52px' }}>
-
-              {/* Brand */}
-              <div>
-                <div style={{
-                  fontFamily: "'Outfit', monospace", fontWeight: 800, fontSize: '1.4rem',
-                  background: 'linear-gradient(90deg, #0ea5e9, #f5c542)',
-                  WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
-                  marginBottom: '14px',
-                }}>{'<SKS />'}</div>
-                <p style={{ color: '#6b6880', fontSize: '0.82rem', lineHeight: 1.75, marginBottom: '20px' }}>
-                  Aspiring DevOps Engineer building cloud infrastructure, automating pipelines, and learning every day.
-                </p>
-                <div style={{ display: 'flex', gap: '10px' }}>
-                  {[
-                    { icon: 'github', url: 'https://github.com/shashi232' },
-                    { icon: 'linkedin', url: 'https://linkedin.com/in/shashi-kant-sharma-a338a5318' },
-                    { icon: 'mail', url: 'mailto:shaskantsharma2@gmail.com' },
-                  ].map((s, i) => (
-                    <a key={i} href={s.url} target="_blank" rel="noopener noreferrer" className="footer-social">
-                      <div className={`icon-${s.icon}`} />
-                    </a>
-                  ))}
-                </div>
-              </div>
-
-              {/* Nav */}
-              <div>
-                <h4 style={{ fontSize: '0.72rem', fontWeight: 700, letterSpacing: '2px', textTransform: 'uppercase', color: '#8a86a0', marginBottom: '18px' }}>Navigation</h4>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                  {links.map(l => (
-                    <a key={l.href} href={l.href} onClick={(e) => scroll(e, l.href)} className="footer-link">
-                      <span style={{ color: '#4e4a62', fontFamily: 'monospace', fontSize: '0.7rem' }}>→</span> {l.label}
-                    </a>
-                  ))}
-                </div>
-              </div>
-
-              {/* Status */}
-              <div>
-                <h4 style={{ fontSize: '0.72rem', fontWeight: 700, letterSpacing: '2px', textTransform: 'uppercase', color: '#8a86a0', marginBottom: '18px' }}>Status</h4>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                  {[
-                    { dot: '#22c55e', text: 'Open to Internships' },
-                    { dot: '#0ea5e9', text: 'Available for Freelance' },
-                    { dot: '#f5c542', text: 'Actively Learning' },
-                  ].map((s, i) => (
-                    <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '9px' }}>
-                      <div style={{ width: '6px', height: '6px', borderRadius: '50%', background: s.dot, flexShrink: 0, boxShadow: `0 0 5px ${s.dot}` }} />
-                      <span style={{ fontSize: '0.82rem', color: '#8a86a0' }}>{s.text}</span>
-                    </div>
-                  ))}
-                </div>
-                <div style={{ marginTop: '24px', padding: '14px', borderRadius: '12px', background: 'rgba(14, 165, 233,0.03)', border: '1px solid rgba(14, 165, 233,0.08)' }}>
-                  <div style={{ fontFamily: 'monospace', fontSize: '0.68rem', color: '#6b6880', marginBottom: '4px' }}>📍 Location</div>
-                  <div style={{ fontSize: '0.82rem', color: '#e8e6f0' }}>Jaipur, Rajasthan, India</div>
-                </div>
-              </div>
+      <>
+        <footer data-name="footer" className="bg-[#0e0e0e] w-full py-32 px-6 md:px-12">
+          <div className="flex flex-col md:flex-row justify-between items-end gap-12 w-full max-w-[1800px] mx-auto reveal">
+            <div className="space-y-4">
+              <span className="text-white text-3xl font-headline tracking-[0.2em] font-light uppercase">SKS / Architect</span>
+              <p className="font-body text-[10px] tracking-[0.4em] uppercase text-white/40 mt-4">DESIGNED AS INFRASTRUCTURE. © {yr}</p>
             </div>
-
-            {/* Bottom */}
-            <div style={{ borderTop: '1px solid rgba(14, 165, 233,0.06)', padding: '20px 0', display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center', gap: '12px' }}>
-              <p style={{ fontSize: '0.75rem', color: '#6b6880' }}>
-                © {yr} Shashi Kant Sharma · Built with ❤️ & React
-              </p>
-              <button onClick={toTop} className="footer-top-btn" title="Back to top">
-                <div className="icon-chevron-up" />
-              </button>
+            <div className="flex flex-wrap gap-8 md:gap-16">
+              <a href="https://github.com/shashi232" target="_blank" rel="noopener noreferrer" className="font-body text-[10px] tracking-[0.4em] uppercase text-white/40 hover:text-primary-fixed hover:tracking-[0.5em] transition-all duration-700">SOURCE</a>
+              <a href="https://linkedin.com/in/shashi-kant-sharma-a338a5318" target="_blank" rel="noopener noreferrer" className="font-body text-[10px] tracking-[0.4em] uppercase text-white/40 hover:text-primary-fixed hover:tracking-[0.5em] transition-all duration-700">NETWORK</a>
+              <a href="mailto:shaskantsharma2@gmail.com" className="font-body text-[10px] tracking-[0.4em] uppercase text-white/40 hover:text-primary-fixed hover:tracking-[0.5em] transition-all duration-700">TRANSMIT</a>
             </div>
           </div>
-        </div>
+          <div className="mt-16 border-t border-white/5 pt-16 flex justify-end max-w-[1800px] mx-auto reveal reveal-delay-1">
+            <button onClick={toTop} className="font-body text-[10px] tracking-[0.3em] uppercase text-white/30 hover:text-white transition-colors duration-300">
+               [ RETURN TO TOP ]
+            </button>
+          </div>
+        </footer>
 
-        <style>{`
-          .footer-social {
-            width: 36px; height: 36px; border-radius: 9px;
-            border: 1px solid rgba(14, 165, 233,0.1); background: rgba(14, 165, 233,0.04);
-            display: flex; align-items: center; justify-content: center;
-            color: #8a86a0; text-decoration: none; font-size: 1rem;
-            transition: transform 0.2s ease, color 0.2s ease, border-color 0.2s ease, background 0.2s ease;
-          }
-          .footer-social:hover { color: #0ea5e9; border-color: rgba(14, 165, 233,0.3); background: rgba(14, 165, 233,0.08); transform: translateY(-2px); }
-
-          .footer-link {
-            font-size: 0.82rem; color: #6b6880; text-decoration: none;
-            display: flex; align-items: center; gap: 7px;
-            transition: color 0.2s ease;
-          }
-          .footer-link:hover { color: #0ea5e9; }
-
-          .footer-top-btn {
-            width: 34px; height: 34px; border-radius: 9px;
-            border: 1px solid rgba(14, 165, 233,0.15); background: rgba(14, 165, 233,0.05);
-            color: #0ea5e9; cursor: pointer; display: flex; align-items: center; justify-content: center;
-            font-size: 0.95rem; transition: transform 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
-          }
-          .footer-top-btn:hover { background: rgba(14, 165, 233,0.1); transform: translateY(-2px); box-shadow: 0 0 15px rgba(14, 165, 233,0.25); }
-        `}</style>
-      </footer>
+        {/* BRUTALIST FILLER SECTION (The Monolith) via StitchMCP */}
+        <section className="relative min-h-[795px] bg-[#000000] flex items-center justify-center overflow-hidden border-t border-primary-fixed/5 hidden md:flex">
+          <style>{`
+            .glow-neon { box-shadow: 0 0 60px 10px rgba(188, 255, 0, 0.3); }
+            .monolith-gradient { background: linear-gradient(180deg, #bcff00 0%, #4a6700 100%); }
+          `}</style>
+          
+          <div className="absolute inset-0 opacity-20 pointer-events-none">
+            <div className="absolute top-0 left-0 w-full h-full border-[20vw] border-surface-container-lowest/50 scale-110"></div>
+          </div>
+          
+          <div className="relative group z-10">
+            <div className="absolute -inset-20 bg-primary-fixed/10 blur-[120px] rounded-full group-hover:bg-primary-fixed/20 transition-all duration-1000"></div>
+            
+            <div className="relative w-48 md:w-72 h-[530px] monolith-gradient glow-neon border border-primary-fixed/40 transition-transform duration-700 hover:scale-105 group-hover:rotate-1">
+              <div className="absolute inset-0 opacity-30 flex flex-col justify-between p-4 font-body text-[8px] text-on-primary-fixed leading-none overflow-hidden select-none">
+                <div className="flex justify-between"><span>0x0012FF</span><span>SECURE_LINK</span></div>
+                <div className="flex justify-between"><span>CPU_TEMP_44C</span><span>LOAD_0.22</span></div>
+                <div className="flex justify-between"><span>HASH_A87B2</span><span>PKT_RCV</span></div>
+                <div className="flex justify-between"><span>SYS_ID_MONO</span><span>UPTIME_99.9</span></div>
+                <div className="flex justify-between"><span>0x0012FF</span><span>SECURE_LINK</span></div>
+                <div className="flex justify-between"><span>CPU_TEMP_44C</span><span>LOAD_0.22</span></div>
+                <div className="flex justify-between"><span>HASH_A87B2</span><span>PKT_RCV</span></div>
+                <div className="flex justify-between"><span>SYS_ID_MONO</span><span>UPTIME_99.9</span></div>
+                <div className="flex justify-between"><span>0x0012FF</span><span>SECURE_LINK</span></div>
+                <div className="flex justify-between"><span>CPU_TEMP_44C</span><span>LOAD_0.22</span></div>
+                <div className="flex justify-between"><span>HASH_A87B2</span><span>PKT_RCV</span></div>
+                <div className="flex justify-between"><span>SYS_ID_MONO</span><span>UPTIME_99.9</span></div>
+              </div>
+            </div>
+            
+            <div className="absolute -top-32 -left-48 md:-left-64 hidden md:block">
+              <div className="flex flex-col gap-2 items-start border-l border-primary-fixed/40 pl-6 py-2">
+                <span className="text-primary-fixed/40 font-bold text-[10px] tracking-[0.4em] uppercase">LINK_INTEGRITY</span>
+                <span className="text-white font-bold text-lg tracking-widest uppercase">CONNECTION SECURE</span>
+              </div>
+            </div>
+            <div className="absolute top-1/2 -right-48 md:-right-80 hidden md:block">
+              <div className="flex flex-col gap-2 items-start border-l border-primary-fixed/40 pl-6 py-2">
+                <span className="text-primary-fixed/40 font-bold text-[10px] tracking-[0.4em] uppercase">NETWORK_FLOW</span>
+                <span className="text-white font-bold text-lg tracking-widest uppercase">LATENCY 12ms</span>
+              </div>
+            </div>
+            <div className="absolute -bottom-24 -left-32 md:-left-40 hidden md:block">
+              <div className="flex flex-col gap-2 items-start border-l border-primary-fixed/40 pl-6 py-2">
+                <span className="text-primary-fixed/40 font-bold text-[10px] tracking-[0.4em] uppercase">SYSTEM_PULSE</span>
+                <span className="text-white font-bold text-lg tracking-widest uppercase">SYSTEM ONLINE</span>
+              </div>
+            </div>
+          </div>
+          
+          <div className="absolute top-12 left-12 opacity-5 select-none font-headline italic text-[clamp(2rem,8vw,8rem)] text-primary pointer-events-none">TERMINUS</div>
+          <div className="absolute bottom-12 right-12 opacity-5 select-none font-headline italic text-[clamp(2rem,8vw,8rem)] text-primary pointer-events-none">VOID_CORE</div>
+          
+          <div className="absolute right-8 top-0 bottom-0 flex flex-col justify-center gap-24 opacity-20 hidden lg:flex">
+            <span className="rotate-90 text-primary-fixed text-xs tracking-[1em] whitespace-nowrap">NULL_POINTER_VOID</span>
+            <span className="rotate-90 text-primary-fixed text-xs tracking-[1em] whitespace-nowrap">ROOT_ACCESS_ONLY</span>
+            <span className="rotate-90 text-primary-fixed text-xs tracking-[1em] whitespace-nowrap">00_00_00_00</span>
+          </div>
+        </section>
+      </>
     );
   } catch (error) {
     console.error('Footer component error:', error);
