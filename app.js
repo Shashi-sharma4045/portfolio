@@ -92,14 +92,32 @@ function App() {
   React.useEffect(() => {
     const el = document.getElementById('preloader');
     const perc = document.getElementById('loading-perc');
+    const bar = document.getElementById('preloader-bar');
+    const statusBl = document.getElementById('preloader-status-bl');
     if (!el || !perc) return;
+
+    const statuses = [
+      'ESTABLISHING SECURE LINK...',
+      'MOUNTING FILESYSTEM...',
+      'LOADING DOCKER LAYERS...',
+      'SYNCING KUBERNETES NODES...',
+      'VERIFYING CERTS...',
+      'ALL SYSTEMS NOMINAL.',
+    ];
+    let statusIdx = 0;
+    const statusInterval = setInterval(() => {
+      statusIdx = (statusIdx + 1) % statuses.length;
+      if (statusBl) statusBl.textContent = statuses[statusIdx];
+    }, 600);
 
     let progress = 0;
     const interval = setInterval(() => {
-      progress += Math.floor(Math.random() * 15) + 5;
+      progress += Math.floor(Math.random() * 12) + 4;
       if (progress >= 100) {
         progress = 100;
         clearInterval(interval);
+        clearInterval(statusInterval);
+        if (statusBl) statusBl.textContent = 'ALL SYSTEMS NOMINAL.';
         setTimeout(() => {
           el.style.opacity = '0';
           el.style.transform = 'translateY(-100%)';
@@ -107,6 +125,7 @@ function App() {
         }, 400);
       }
       perc.innerText = progress;
+      if (bar) bar.style.width = progress + '%';
     }, 60);
   }, []);
 

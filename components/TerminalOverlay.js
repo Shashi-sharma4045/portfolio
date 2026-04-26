@@ -2,8 +2,16 @@ function TerminalOverlay({ isOpen, onClose }) {
   const [input, setInput] = React.useState('');
   const [history, setHistory] = React.useState([]);
   const [isTyping, setIsTyping] = React.useState(false);
+  const [cmdHistory, setCmdHistory] = React.useState([]);
+  const [historyIdx, setHistoryIdx] = React.useState(-1);
+  const [liveTime, setLiveTime] = React.useState(new Date().toLocaleTimeString());
   const scrollRef = React.useRef(null);
   const inputRef = React.useRef(null);
+
+  React.useEffect(() => {
+    const t = setInterval(() => setLiveTime(new Date().toLocaleTimeString()), 1000);
+    return () => clearInterval(t);
+  }, []);
 
   React.useEffect(() => {
     if (isOpen) {
@@ -41,17 +49,19 @@ function TerminalOverlay({ isOpen, onClose }) {
       case 'help':
         output = (
           <div className="text-on-surface-variant my-2 ml-4 space-y-1">
-            <p><span className="text-primary-fixed w-24 md:w-32 inline-block">whoami</span> : Identity matrix query</p>
-            <p><span className="text-primary-fixed w-24 md:w-32 inline-block">projects</span> : List active deployments</p>
-            <p><span className="text-primary-fixed w-24 md:w-32 inline-block">date</span> : System time synchronization</p>
-            <p><span className="text-primary-fixed w-24 md:w-32 inline-block">uptime</span> : System load averages</p>
-            <p><span className="text-primary-fixed w-24 md:w-32 inline-block">ping</span> : Local network diagnosis</p>
-            <p><span className="text-primary-fixed w-24 md:w-32 inline-block">ls -la</span> : Display directory structure</p>
-            <p><span className="text-primary-fixed w-24 md:w-32 inline-block">cat</span> : Read file streams</p>
-            <p><span className="text-primary-fixed w-24 md:w-32 inline-block">top</span> : Monitor process threads</p>
-            <p><span className="text-primary-fixed w-24 md:w-32 inline-block">neofetch</span> : Render OS telemetry</p>
-            <p><span className="text-primary-fixed w-24 md:w-32 inline-block">clear</span> : Flush terminal log</p>
-            <p><span className="text-primary-fixed w-24 md:w-32 inline-block">sudo rm -rf /</span> : System override attempt</p>
+            <p><span className="text-primary-fixed w-32 inline-block">whoami</span> : Identity matrix query</p>
+            <p><span className="text-primary-fixed w-32 inline-block">projects</span> : List active deployments</p>
+            <p><span className="text-primary-fixed w-32 inline-block">date</span> : System time synchronization</p>
+            <p><span className="text-primary-fixed w-32 inline-block">uptime</span> : System load averages</p>
+            <p><span className="text-primary-fixed w-32 inline-block">ping</span> : Local network diagnosis</p>
+            <p><span className="text-primary-fixed w-32 inline-block">ls -la</span> : Display directory structure</p>
+            <p><span className="text-primary-fixed w-32 inline-block">cat</span> : Read file streams</p>
+            <p><span className="text-primary-fixed w-32 inline-block">top / htop</span> : Monitor process threads</p>
+            <p><span className="text-primary-fixed w-32 inline-block">neofetch</span> : Render OS telemetry</p>
+            <p><span className="text-primary-fixed w-32 inline-block">matrix</span> : <span className="text-green-400">[ CLASSIFIED ]</span></p>
+            <p><span className="text-primary-fixed w-32 inline-block">clear</span> : Flush terminal log</p>
+            <p><span className="text-primary-fixed w-32 inline-block">sudo rm -rf /</span> : System override attempt</p>
+            <p className="mt-3 text-white/30 text-xs">↑ ↓ arrow keys navigate command history</p>
           </div>
         );
         break;
@@ -196,6 +206,48 @@ drwxr-xr-x 2 sks  sks   4096 Apr 26 12:15 docker-compose
         return;
       case '':
         break;
+      case 'matrix':
+        output = (
+          <div className="my-2 ml-4">
+            <style>{`
+              @keyframes matrix-fall {
+                0% { transform: translateY(-100%); opacity: 1; }
+                100% { transform: translateY(100%); opacity: 0; }
+              }
+              .matrix-col {
+                position: absolute;
+                top: 0;
+                font-family: monospace;
+                font-size: 13px;
+                line-height: 1.4;
+                color: #bcff00;
+                writing-mode: vertical-rl;
+                white-space: nowrap;
+                animation: matrix-fall linear infinite;
+                opacity: 0.8;
+              }
+            `}</style>
+            <div style={{ position: 'relative', height: '200px', overflow: 'hidden', background: '#000', border: '1px solid #bcff0033' }}>
+              {Array.from({length: 18}, (_, i) => (
+                <span
+                  key={i}
+                  className="matrix-col"
+                  style={{
+                    left: `${(i / 18) * 100}%`,
+                    animationDuration: `${1.2 + Math.random() * 2}s`,
+                    animationDelay: `${Math.random() * 2}s`,
+                    opacity: 0.3 + Math.random() * 0.7,
+                    fontSize: `${10 + Math.random() * 6}px`,
+                  }}
+                >
+                  {'ｦｱｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜﾝ1234567890'.split('').sort(() => Math.random() - 0.5).join('')}
+                </span>
+              ))}
+            </div>
+            <p className="text-primary-fixed text-xs mt-2 tracking-widest">[ MATRIX PROTOCOL ENGAGED // DECRYPTING REALITY ]</p>
+          </div>
+        );
+        break;
       default:
         output = <p className="text-error my-2 ml-4">Command not found: {trimmed}. Type <span className="text-primary-fixed font-bold text-white">help</span> for assistance.</p>;
     }
@@ -205,13 +257,27 @@ drwxr-xr-x 2 sks  sks   4096 Apr 26 12:15 docker-compose
     } else if (trimmed !== '') {
       setHistory(prev => [...prev, { type: 'command', cmd: trimmed }]);
     }
+    if (trimmed && trimmed !== 'clear') {
+      setCmdHistory(prev => [trimmed, ...prev.slice(0, 49)]);
+    }
   };
 
   const handleKeyDown = (e) => {
     if (e.key === 'Enter') {
       const val = input;
       setInput('');
+      setHistoryIdx(-1);
       processCommand(val);
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      const next = Math.min(historyIdx + 1, cmdHistory.length - 1);
+      setHistoryIdx(next);
+      setInput(cmdHistory[next] || '');
+    } else if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      const next = Math.max(historyIdx - 1, -1);
+      setHistoryIdx(next);
+      setInput(next === -1 ? '' : cmdHistory[next] || '');
     }
   };
 
@@ -259,6 +325,7 @@ drwxr-xr-x 2 sks  sks   4096 Apr 26 12:15 docker-compose
           <div className="text-left md:text-right font-body text-xs text-on-surface-variant uppercase tracking-widest hidden md:block">
             <p>Location: 52.5200° N, 13.4050° E</p>
             <p>Status: <span className="text-primary-fixed">Encrypted</span></p>
+            <p>Time: <span className="text-primary-fixed">{liveTime}</span></p>
             <p>Uptime: 432:12:08:44</p>
           </div>
         </div>

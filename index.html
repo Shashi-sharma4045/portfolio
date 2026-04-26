@@ -268,25 +268,81 @@
     </style>
 </head>
 <body>
-    <!-- Preloader -->
-    <div id="preloader" style="position:fixed;inset:0;background:#050505;z-index:9999;display:flex;align-items:center;justify-content:center;color:#fff;font-family:'Inter', sans-serif;font-size:clamp(3rem, 10vw, 6rem);font-weight:700;transition:transform 1s cubic-bezier(0.7,0,0.3,1), opacity 0.8s ease;">
-      <span id="loading-perc">0</span><span style="font-size:0.6em;opacity:0.5">%</span>
+    <!-- Preloader (Stitch MCP: Monolith Gallery Design) -->
+    <div id="preloader" style="position:fixed;inset:0;background:#0a0a0a;z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden;transition:opacity 0.8s ease, transform 1s cubic-bezier(0.7,0,0.3,1);font-family:'Space Grotesk',sans-serif;">
+      <style>
+        @keyframes preloader-pulse-glow {
+          0%,100% { box-shadow: 0 0 20px 5px rgba(182,247,0,0.2); }
+          50% { box-shadow: 0 0 60px 20px rgba(182,247,0,0.5); }
+        }
+        @keyframes preloader-blink {
+          0%,100% { opacity:1; } 50% { opacity:0; }
+        }
+        #preloader-slab {
+          animation: preloader-pulse-glow 2.5s cubic-bezier(0.4,0,0.6,1) infinite;
+        }
+        #preloader-cursor {
+          display:inline-block;
+          animation: preloader-blink 0.9s step-end infinite;
+        }
+        @keyframes preloader-scanline {
+          0% { transform: translateY(-100%); }
+          100% { transform: translateY(100vh); }
+        }
+        #preloader-scanline {
+          position:absolute;left:0;top:0;width:100%;height:2px;
+          background:linear-gradient(transparent,rgba(182,247,0,0.06),transparent);
+          animation: preloader-scanline 3s linear infinite;
+          pointer-events:none;
+        }
+      </style>
+
+      <!-- Scanline effect -->
+      <div id="preloader-scanline"></div>
+
+      <!-- Corner status texts -->
+      <div style="position:absolute;top:1.5rem;left:1.5rem;font-size:10px;letter-spacing:.2em;color:rgba(255,255,255,0.18);text-transform:uppercase">MOUNTING KERNEL... [OK]</div>
+      <div style="position:absolute;top:1.5rem;right:1.5rem;font-size:10px;letter-spacing:.2em;color:rgba(255,255,255,0.18);text-transform:uppercase;text-align:right">LOADING ASSETS... [WAIT]</div>
+      <div style="position:absolute;bottom:4rem;left:1.5rem;font-size:10px;letter-spacing:.2em;color:rgba(255,255,255,0.18);text-transform:uppercase" id="preloader-status-bl">ESTABLISHING SECURE LINK...</div>
+      <div style="position:absolute;bottom:4rem;right:1.5rem;font-size:10px;letter-spacing:.2em;color:rgba(255,255,255,0.18);text-transform:uppercase;text-align:right">ENCRYPTING BUILDS... [IN PROGRESS]</div>
+
+      <!-- Centerpiece -->
+      <div style="display:flex;flex-direction:column;align-items:center;gap:2.5rem;z-index:1">
+        <!-- Glowing neon slab -->
+        <div id="preloader-slab" style="width:3.5rem;height:18rem;background:linear-gradient(180deg,#bcff00 0%,#4a6700 100%)"></div>
+
+        <!-- Init text -->
+        <div style="color:#bcff00;font-size:clamp(0.7rem,1.5vw,1rem);letter-spacing:.25em;text-transform:uppercase;font-weight:700;display:flex;align-items:center;gap:4px">
+          <span id="preloader-label">INITIALIZING SYSTEM</span><span id="preloader-cursor">_</span>
+        </div>
+
+        <!-- Percentage counter -->
+        <div style="color:rgba(255,255,255,0.4);font-size:clamp(0.6rem,1.2vw,0.8rem);letter-spacing:.3em;text-transform:uppercase">
+          SKS // INFRA. CORE &nbsp;·&nbsp; <span id="loading-perc" style="color:#bcff00">0</span>%
+        </div>
+      </div>
+
+      <!-- Bottom progress bar -->
+      <div style="position:absolute;bottom:0;left:0;width:100%;height:3px;background:#111">
+        <div id="preloader-bar" style="height:100%;background:#bcff00;width:0%;transition:width 0.1s linear;box-shadow:0 0 8px #bcff00"></div>
+      </div>
     </div>
 
     <div id="root"></div>
     
-    <script src="config.js?v=114"></script>
-    <script type="text/babel" src="components/Navbar.js?v=114"></script>
-    <script type="text/babel" src="components/InteractiveElements.js?v=114"></script>
-    <script type="text/babel" src="components/TerminalOverlay.js?v=114"></script>
-    <script type="text/babel" src="components/Hero.js?v=114"></script>
-    <script type="text/babel" src="components/About.js?v=114"></script>
-    <script type="text/babel" src="components/Skills.js?v=114"></script>
-    <script type="text/babel" src="components/Projects.js?v=114"></script>
-    <script type="text/babel" src="components/Experience.js?v=114"></script>
-    <script type="text/babel" src="components/Contact.js?v=114"></script>
-    <script type="text/babel" src="components/Footer.js?v=114"></script>
-    <script type="text/babel" src="utils/animations.js?v=114"></script>
-    <script type="text/babel" src="app.js?v=114"></script>
+    <script src="config.js?v=118"></script>
+    <script type="text/babel" src="components/Navbar.js?v=118"></script>
+    <script type="text/babel" src="components/InteractiveElements.js?v=118"></script>
+    <script type="text/babel" src="components/TerminalOverlay.js?v=118"></script>
+    <script type="text/babel" src="components/Hero.js?v=118"></script>
+    <script type="text/babel" src="components/About.js?v=118"></script>
+    <script type="text/babel" src="components/Skills.js?v=118"></script>
+    <script type="text/babel" src="components/Projects.js?v=118"></script>
+    <script type="text/babel" src="components/Experience.js?v=118"></script>
+    <script type="text/babel" src="components/Contact.js?v=118"></script>
+    <script type="text/babel" src="components/Footer.js?v=118"></script>
+    <script type="text/babel" src="utils/animations.js?v=118"></script>
+    <script src="utils/visual-fx.js?v=118"></script>
+    <script type="text/babel" src="app.js?v=118"></script>
 </body>
 </html>
