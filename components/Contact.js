@@ -4,11 +4,14 @@ function Contact() {
   const [visible, setVisible] = React.useState(false);
   const ref = React.useRef(null);
 
-  // Web3Forms API Key Setup
-  // Visit https://web3forms.com to get your free access key for shaskantsharma2@gmail.com
-  const WEB3FORMS_ACCESS_KEY = typeof window !== 'undefined' && window.ENV && window.ENV.WEB3FORMS_ACCESS_KEY
-    ? window.ENV.WEB3FORMS_ACCESS_KEY
-    : (typeof process !== 'undefined' && process.env.WEB3FORMS_ACCESS_KEY ? process.env.WEB3FORMS_ACCESS_KEY : "");
+  // Web3Forms API Key — client-side only (not a secret, safe to include here)
+  // Primary source: config.js injected at deploy time via GitHub Actions Secret
+  // Fallback: hardcoded key for when GitHub Secret is not yet configured
+  const WEB3FORMS_ACCESS_KEY = (
+    (typeof window !== 'undefined' && window.ENV && window.ENV.WEB3FORMS_ACCESS_KEY)
+      ? window.ENV.WEB3FORMS_ACCESS_KEY
+      : "5d541895-af46-4744-b2de-0ed54c1a1630"
+  );
 
   React.useEffect(() => {
     const obs = new IntersectionObserver(([e]) => { if (e.isIntersecting) setVisible(true); }, { threshold: 0.15 });
